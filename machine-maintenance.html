@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Maintenance Case Study - Gaurav Borra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[data-theme="dark"] {
+  --bg: #0e0e0c;
+  --bg2: #161614;
+  --bg3: #1c1c19;
+  --card: #141412;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #f0ede6;
+  --text-muted: #60605a;
+  --text-mid: #a0a09a;
+  --accent: #c8f76b;
+  --accent-soft-bg: rgba(200, 247, 107, 0.09);
+  --accent-soft-border: rgba(200, 247, 107, 0.2);
+  --accent-soft-text: #d5eca7;
+  --nav-bg: rgba(14,14,12,0.96);
+  --toggle-bg: #222220;
+  --toggle-border: rgba(255,255,255,0.1);
+  --toggle-knob: #f0ede6;
+}
+[data-theme="light"] {
+  --bg: #faf9f6;
+  --bg2: #f0ede6;
+  --bg3: #e8e5de;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.07);
+  --border-hover: rgba(0,0,0,0.14);
+  --text: #141410;
+  --text-muted: #909088;
+  --text-mid: #4c4c48;
+  --accent: #4a8a10;
+  --accent-soft-bg: rgba(74, 138, 16, 0.08);
+  --accent-soft-border: rgba(74, 138, 16, 0.2);
+  --accent-soft-text: #446f1c;
+  --nav-bg: rgba(244,242,237,0.96);
+  --toggle-bg: #e0ddd6;
+  --toggle-border: rgba(0,0,0,0.1);
+  --toggle-knob: #141410;
+}
+:root {
+  --serif: 'Fraunces', Georgia, serif;
+  --mono: 'Geist', monospace;
+  --sans: 'Geist', sans-serif;
+  --col: 740px;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.case-back {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 140;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--nav-bg);
+  color: var(--text-mid);
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.18s ease;
+}
+.case-back:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+.wrap {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.nav .wrap {
+  height: 54px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo {
+  font-family: Fraunces;
+  font-size: 12px; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text);
+}
+.nav-links { display: flex; gap: 1px; }
+.nav-link {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px;
+  font-size: 11.5px; font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: all 0.15s; cursor: pointer;
+}
+.nav-link:hover { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.nav-num { font-family: var(--mono); font-size: 9px; color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 1.25rem; }
+.theme-toggle { display: flex; align-items: center; gap: 7px; cursor: pointer; user-select: none; }
+.toggle-track {
+  width: 38px; height: 21px;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 100px;
+  position: relative; transition: all 0.25s; flex-shrink: 0;
+}
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 13px; height: 13px;
+  border-radius: 50%; background: var(--toggle-knob);
+  transition: transform 0.25s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px;
+}
+[data-theme="light"] .theme-toggle .toggle-knob { transform: translateX(17px); }
+.toggle-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; width: 26px; }
+.nav-status { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--accent); letter-spacing: 0.04em; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.case-page {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+}
+.case-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 4.2rem 1.25rem;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 3rem;
+}
+.case-side {
+  position: sticky;
+  top: 88px;
+  align-self: start;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 1rem 0.95rem;
+}
+.case-side-eyebrow {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-size: 9.5px;
+  color: var(--accent);
+  margin-bottom: 0.45rem;
+}
+.case-side-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+.case-side-nav { display: flex; flex-direction: column; gap: 0.38rem; }
+.case-side-link {
+  font-size: 12px; color: var(--text-mid);
+  border: 1px solid transparent; border-radius: 6px; padding: 0.45rem 0.55rem;
+}
+.case-side-link:hover { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.case-side-link.is-active {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.case-header { padding-bottom: 2.2rem; border-bottom: 1px solid var(--border); }
+.case-kicker { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 10px; color: var(--accent); margin-bottom: 0.7rem; }
+.case-title { font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.35rem); line-height: 1.05; margin-bottom: 1rem; }
+.case-title em {
+  font-family: inherit;
+  font-style: normal;
+  opacity: 0.6;
+}
+.case-subtitle { font-size: 14px; line-height: 1.9; color: var(--text-mid); max-width: 75ch; }
+
+.case-section {
+  padding: 2.3rem 0;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 72px;
+}
+.case-section:last-child { border-bottom: 0; }
+.case-h2 {
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--text-mid);
+  margin-bottom: 0.65rem;
+}
+.case-h3 {
+  font-family: var(--serif);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: clamp(1.45rem, 3.2vw, 2.15rem);
+  color: var(--text);
+  line-height: 1.2;
+  margin: 0 0 1rem;
+}
+.case-p { font-size: 14px; line-height: 1.85; color: var(--text-mid); margin-bottom: 0.85rem; }
+.case-p strong { color: var(--text); }
+
+.case-list { list-style: none; margin: 0.4rem 0 1.15rem; }
+.case-list li {
+  position: relative;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-mid);
+  padding-left: 1rem;
+  margin-bottom: 0.4rem;
+}
+.case-list li::before { content: "•"; position: absolute; left: 0; top: 0; color: var(--accent); }
+
+.case-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.case-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background-color: rgba(20, 20, 18, 1);
+  padding: 1rem;
+}
+[data-theme="light"] .case-card { background-color: var(--card); }
+.case-card-title {
+  font-size: 14px;
+  letter-spacing: 0;
+  margin-bottom: 0.35rem;
+  text-transform: none;
+  font-family: var(--sans);
+  font-weight: 500;
+  color: var(--text);
+}
+.case-card-text { font-size: 13px; line-height: 1.7; color: var(--text-mid); }
+
+.case-placeholder {
+  border: 1px dashed var(--border-hover);
+  border-radius: 10px;
+  background: var(--bg3);
+  min-height: 185px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem;
+}
+.case-metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.case-metric {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 1rem;
+}
+.case-metric-value { font-family: 'Geist', sans-serif; font-size: 1.6rem; margin-bottom: 0.4rem; }
+.case-metric-label { font-size: 12.5px; line-height: 1.65; color: var(--text-mid); }
+.case-hero-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.35rem; }
+.problem-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.insight {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 1rem;
+}
+.insight-num { font-family: var(--serif); font-size: 13px; color: var(--text-muted); }
+.insight-title { font-size: 14px; font-weight: 600; margin-bottom: 0.35rem; }
+.insight-decision {
+  margin-top: 0.55rem;
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--accent-soft-text);
+  background: var(--accent-soft-bg);
+  border: 1px solid var(--accent-soft-border);
+  border-radius: 7px;
+  padding: 0.38rem 0.56rem;
+}
+.pillars { display: flex; flex-direction: column; gap: 1.6rem; }
+.pillar {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 1rem;
+}
+.pillar-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; }
+.pillar-num { font-family: var(--serif); font-size: 13px; color: var(--text-muted); }
+.pillar-title { font-size: 14px; font-weight: 600; letter-spacing: 0.02em; }
+.tradeoff {
+  margin-top: 0.9rem;
+  border-left: 2px solid var(--border-hover);
+  background: var(--bg3);
+  border-radius: 0 8px 8px 0;
+  padding: 0.7rem 0.85rem;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+.screen-row { display: grid; gap: 1rem; margin-top: 0.8rem; }
+.screen-row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.screen-row-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.solution-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+.section-theme-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  user-select: none;
+}
+.section-theme-toggle .toggle-track {
+  width: 38px;
+  height: 21px;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 100px;
+  position: relative;
+  transition: all 0.25s;
+  flex-shrink: 0;
+}
+.section-theme-toggle .toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--toggle-knob);
+  transition: transform 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+.section-theme-toggle[data-mode="light"] .toggle-knob { transform: translateX(17px); }
+.section-toggle-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: 34px;
+}
+.solution-control-btn {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.44rem 0.62rem;
+  background: var(--card);
+  color: var(--text-mid);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+}
+.solution-control-btn:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+  background: var(--bg2);
+}
+.expand-icon {
+  width: 13px;
+  height: 13px;
+  display: inline-block;
+  color: currentColor;
+}
+.shift-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+.shift-gallery-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.solution-mini-heading {
+  margin-top: 0.85rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.solution-subsection-divider {
+  margin-top: 1.15rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+.solution-green-note {
+  margin-top: 0.4rem;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--accent);
+}
+.shift-gallery-single { grid-template-columns: 1fr; }
+.web-shot .shift-shot-copy { text-align: left; }
+.shift-shot-points {
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--text-mid);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.shift-shot-points li { margin-bottom: 0.35rem; }
+.shift-shot-points li:last-child { margin-bottom: 0; }
+.shift-shot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.shift-shot-media {
+  padding: 0;
+}
+.shift-shot-media img {
+  width: 100%;
+  display: block;
+  border-radius: 0;
+}
+.shift-shot-copy {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 0.8rem 0.85rem 0.9rem;
+  text-align: center;
+}
+.shift-shot-title {
+  font-size: 12.5px;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.28rem;
+}
+.shift-shot-desc {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-mid);
+}
+.screen-modal[hidden] { display: none; }
+.screen-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+}
+.screen-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+.screen-modal-dialog {
+  position: relative;
+  width: min(1700px, 94vw);
+  max-height: 94vh;
+  margin: 3vh auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.screen-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--nav-bg);
+}
+.screen-modal-title {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+.screen-modal-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 0.75rem;
+}
+.screen-modal-body .shift-gallery {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0;
+}
+.screen-modal-body .shift-gallery.shift-gallery-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.screen-modal-body .shift-shot { gap: 0.42rem; }
+.screen-modal-body .shift-shot-media img {
+  width: 80%;
+  margin: 0 auto;
+}
+.screen-modal-body .shift-shot-copy { padding: 0.58rem 0.62rem 0.62rem; }
+.screen-modal-body .shift-shot-title { font-size: 11px; margin-bottom: 0.14rem; }
+.screen-modal-body .shift-shot-desc { font-size: 10px; line-height: 1.45; }
+.unexpected {
+  margin-top: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background-color: rgba(20, 20, 18, 1);
+  padding: 1rem;
+}
+[data-theme="light"] .unexpected { background-color: var(--bg3); }
+.unexpected-tag {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+  margin-bottom: 0.55rem;
+  font-weight: 500;
+}
+.meta-row {
+  display: flex;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  margin-top: 1.35rem;
+}
+.meta-key {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+.meta-val {
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.reflection-item { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.reflection-item:last-child { border-bottom: 0; }
+.other-projects {
+  margin-top: 3.4rem;
+  padding-top: 2.2rem;
+  border-top: 1px solid var(--border);
+}
+.other-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.95rem;
+}
+.other-project-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 1rem;
+  transition: all 0.18s ease;
+}
+.other-project-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg2);
+}
+.other-project-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.45rem;
+}
+.other-project-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-mid);
+  margin-bottom: 0.8rem;
+}
+.other-project-cta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.footer .wrap {
+  padding-top: 1.6rem;
+  padding-bottom: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-l { font-family: var(--mono); font-size: 10.5px; color: var(--text-muted); letter-spacing: 0.03em; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-link { font-family: var(--mono); font-size: 10.5px; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; }
+.footer-link:hover { color: var(--accent); }
+
+@media (max-width: 930px) {
+  .case-wrap { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 3.1rem; padding-bottom: 3.1rem; }
+  .case-side { position: static; }
+  .case-side-nav { flex-direction: row; flex-wrap: wrap; }
+}
+@media (max-width: 700px) {
+  .case-grid-2, .case-metric-grid, .case-hero-metrics, .problem-grid, .outcome-stats, .screen-row-2, .screen-row-3 { grid-template-columns: 1fr; }
+  .shift-gallery { grid-template-columns: 1fr; }
+  .other-project-grid { grid-template-columns: 1fr; }
+  .screen-modal-dialog {
+    width: min(96vw, 96vw);
+    max-height: 82vh;
+    margin: 8vh auto;
+  }
+  .screen-modal-body { overflow: auto; }
+  .screen-modal-body .shift-gallery { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body id="top">
+<a href="portfolio.html" class="case-back" id="case-back" aria-label="Back to home">← Back</a>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="portfolio.html" class="nav-logo" aria-label="Go to home">GB</a>
+    <div class="nav-links">
+      <a href="portfolio.html#work" class="nav-link"><span class="nav-num">01</span> Work</a>
+      <a href="portfolio.html#experience" class="nav-link"><span class="nav-num">02</span> Experience</a>
+      <a href="portfolio.html#about" class="nav-link"><span class="nav-num">03</span> About</a>
+      <a href="/cdn-cgi/l/email-protection#3a5d5b4f485b4c585548485b144d5548517a5d575b535614595557" class="nav-link"><span class="nav-num">04</span> Contact</a>
+    </div>
+    <div class="nav-right">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="toggle-label" id="theme-label">Dark</span>
+        <div class="toggle-track">
+          <div class="toggle-knob"><span id="toggle-icon">☽</span></div>
+        </div>
+      </div>
+      <div class="nav-status"><div class="status-dot"></div>Open to work</div>
+    </div>
+  </div>
+</nav>
+
+<main class="case-page">
+  <div class="case-wrap">
+    <aside class="case-side">
+      <p class="case-side-eyebrow">Case Study</p>
+      <p class="case-side-title">Machine Maintenance Platform</p>
+      <nav class="case-side-nav">
+        <a class="case-side-link" href="#top">Context</a>
+        <a class="case-side-link" href="#mm-problem">Problem</a>
+        <a class="case-side-link" href="#mm-learnings">What I have learned</a>
+        <a class="case-side-link" href="#mm-design">The Design</a>
+        <a class="case-side-link" href="#mm-outcome">Outcome</a>
+        <a class="case-side-link" href="#mm-looking-back">Looking Back</a>
+      </nav>
+    </aside>
+
+    <div class="case-main">
+      <header class="case-header" id="mm-context">
+        <p class="case-kicker">Machine Maintenance System - Solvei8</p>
+        <h1 class="case-title">When one machine breaks down, <em>the whole line stops</em></h1>
+        <p class="case-subtitle">
+          Factories were losing hours to breakdowns tracked on paper and resolved over WhatsApp. I designed a mobile-first maintenance platform that gave floor teams real-time coordination - and gave management their first look at machine health data.
+        </p>
+        <div class="case-hero-metrics">
+          <div class="case-metric"><p class="case-metric-value">60%</p><p class="case-metric-label">Reduction in machine downtime</p></div>
+          <div class="case-metric"><p class="case-metric-value">20+</p><p class="case-metric-label">Factories live across Asia</p></div>
+          <div class="case-metric"><p class="case-metric-value">$12k</p><p class="case-metric-label">Monthly recurring revenue</p></div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-item">
+            <p class="meta-key">Role</p>
+            <p class="meta-val">Sole designer - end to end</p>
+          </div>
+          <div class="meta-item">
+            <p class="meta-key">Platform</p>
+            <p class="meta-val">Mobile (Android) + Desktop</p>
+          </div>
+          <div class="meta-item">
+            <p class="meta-key">Type</p>
+            <p class="meta-val">B2B SaaS - Standalone vertical</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="case-section" id="mm-problem">
+        <h2 class="case-h2">Problem</h2>
+        <p class="case-h3">The system ran on memory and goodwill</p>
+        <p class="case-p">A typical production line has 15-20 machines running continuously. If even one breaks down mid-shift, output on the entire line stops - every minute of downtime has a direct cost in delayed orders and overtime.</p>
+        <p class="case-p">Before this system existed, there was no structured way to handle that moment. A supervisor would notice a breakdown, call the mechanic, hope they showed up. Parts were requested over WhatsApp. No one knew if a machine had been fixed or just abandoned. At the end of the day, there was no record of any of it.</p>
+        <div class="problem-grid">
+          <div class="case-card"><p class="case-card-title">No escalation path</p><p class="case-card-text">Supervisors reported issues verbally. Mechanics had no queue, no priority signal, no deadline.</p></div>
+          <div class="case-card"><p class="case-card-title">No parts visibility</p><p class="case-card-text">Spare parts were requested through calls and messages. Stock was unknown until someone walked to the storeroom.</p></div>
+          <div class="case-card"><p class="case-card-title">No maintenance planning</p><p class="case-card-text">Machines had no service schedules. Breakdowns were the only trigger for action - prevention wasn't possible.</p></div>
+          <div class="case-card"><p class="case-card-title">No history</p><p class="case-card-text">Every breakdown was a fresh crisis. No data from past failures, no pattern, no way to plan.</p></div>
+        </div>
+      </section>
+
+      <section class="case-section" id="mm-learnings">
+        <h2 class="case-h2">What I have learned</h2>
+        <p class="case-h3">Three things changed how I designed this</p>
+        <p class="case-p">I spent time with supervisors, mechanics, and inventory managers - the people who would actually live inside this system. The patterns that came out directly shaped design decisions.</p>
+        <div class="insight-list">
+          <article class="insight">
+            <p class="insight-num">01</p>
+            <div>
+              <p class="insight-title">Typing is the enemy</p>
+              <p class="case-p">Everyone on the floor is moving. Supervisors are walking lines, mechanics are under machines. Budget Android devices with cracked screens are the norm. Any flow requiring more than a few taps would be abandoned within a week.</p>
+              <p class="insight-decision">Scanner-first reporting, status cards over forms, zero free-text required to raise a ticket.</p>
+            </div>
+          </article>
+          <article class="insight">
+            <p class="insight-num">02</p>
+            <div>
+              <p class="insight-title">Roles have completely different contexts</p>
+              <p class="case-p">A mechanic and an inventory manager need opposite things. The mechanic needs to act in seconds, on a phone, in a loud environment. The inventory manager needs accuracy, context, and an approval trail - from a desk.</p>
+              <p class="insight-decision">Separate mobile app for floor teams, desktop dashboard for admin - not a single responsive product.</p>
+            </div>
+          </article>
+          <article class="insight">
+            <p class="insight-num">03</p>
+            <div>
+              <p class="insight-title">The real problem wasn't the breakdown - it was the silence after it</p>
+              <p class="case-p">The most damaging part wasn't that machines broke. It was that nobody knew the status for hours. Was anyone looking at it? Was a part ordered? That uncertainty generated the WhatsApp threads and verbal follow-ups.</p>
+              <p class="insight-decision">Ticket states with owners and timestamps: Reported -> In Repair -> Pending Approval -> Resolved.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-section" id="mm-design">
+        <h2 class="case-h2">The Design</h2>
+        <p class="case-h3">Four pillars, one principle: speed over polish</p>
+        <p class="case-p">UX and task efficiency were the priority. Visual design was intentionally kept simple - strong colour-coded states, large touch targets, minimal screen depth. The goal was moving from "need to use" to "easy to use" even under pressure.</p>
+        <div class="pillars">
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">01</p><p class="pillar-title">Machine Breakdown Reporting</p></div>
+            <p class="case-p">The most critical moment is the first 60 seconds after a breakdown is spotted. Every decision in this flow was aimed at getting a ticket raised, assigned, and acknowledged in under a minute - without requiring the supervisor to stop moving.</p>
+            <p class="case-p">The flow is three steps: scan the machine, select the issue type, submit. The mechanic sees it instantly in their queue - with the machine ID, location, and timestamp already filled in.</p>
+            <p class="solution-mini-heading">Raise a Ticket</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="raise-gallery" data-mode="dark" aria-label="Toggle raise a ticket screen theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                </span>
+              </button>
+              <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="raise-gallery">
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                </svg>
+                Expand screens
+              </button>
+            </div>
+            <div class="shift-gallery" id="raise-gallery" data-section-gallery>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Raise/Raise_1.Dark.png" data-dark-src="assets/MM_Screens/Raise/Raise_1.Dark.png" data-light-src="assets/MM_Screens/Raise/Raise_1.White.png" alt="Home to scan entry point screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Home → Scan Entry Point</p>
+                  <p class="shift-shot-desc">Supervisor initiates issue reporting directly from the home screen using the quick-access scanner.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Raise/Raise_2.Dark.png" data-dark-src="assets/MM_Screens/Raise/Raise_2.Dark.png" data-light-src="assets/MM_Screens/Raise/Raise_2.White.png" alt="Scan or search machine screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Scan or Search Machine</p>
+                  <p class="shift-shot-desc">Scanner helps instantly identify the machine, with search as a fallback when scanning isnt possible</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Raise/Raise_3.Dark.png" data-dark-src="assets/MM_Screens/Raise/Raise_3.Dark.png" data-light-src="assets/MM_Screens/Raise/Raise_3.White.png" alt="Choose issue type screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Confirm Machine</p>
+                  <p class="shift-shot-desc">Machine details surface before any action - the supervisor verifies they've scanned the right machine, then decides next steps.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Raise/Raise_4.White-1.png" data-dark-src="assets/MM_Screens/Raise/Raise_4.White-1.png" data-light-src="assets/MM_Screens/Raise/Raise_4.White.png" alt="Select issue type screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Select Issue Type</p>
+                  <p class="shift-shot-desc">Breakdown reasons are predefined, no typing required. Mechanic assignment is optional so the ticket can be raised instantly.</p>
+                </div>
+              </article>
+            </div>
+            <div class="solution-subsection-divider">
+              <p class="solution-mini-heading">Mechanic attending to the raised ticket</p>
+              <div class="solution-controls">
+                <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="issues-gallery" data-mode="dark" aria-label="Toggle mechanic ticket screens theme">
+                  <span class="section-toggle-label">Dark</span>
+                  <span class="toggle-track">
+                    <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                  </span>
+                </button>
+                <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="issues-gallery">
+                  <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                  </svg>
+                  Expand screens
+                </button>
+              </div>
+              <div class="shift-gallery" id="issues-gallery" data-section-gallery>
+                <article class="shift-shot">
+                  <div class="shift-shot-media">
+                    <img class="shift-themed-image" src="assets/MM_Screens/Issues/Issue_1.Dark.png" data-dark-src="assets/MM_Screens/Issues/Issue_1.Dark.png" data-light-src="assets/MM_Screens/Issues/Issue_1.White.png" alt="Mechanic queue screen">
+                  </div>
+                  <div class="shift-shot-copy">
+                    <p class="shift-shot-title">Reported</p>
+                    <p class="shift-shot-desc">Tickets raised by supervisors, ready to be picked up by mechanics</p>
+                  </div>
+                </article>
+                <article class="shift-shot">
+                  <div class="shift-shot-media">
+                    <img class="shift-themed-image" src="assets/MM_Screens/Issues/Issue_2.Dark.png" data-dark-src="assets/MM_Screens/Issues/Issue_2.Dark.png" data-light-src="assets/MM_Screens/Issues/Issue_2.White.png" alt="Ticket details screen">
+                  </div>
+                  <div class="shift-shot-copy">
+                    <p class="shift-shot-title">In-Repair</p>
+                    <p class="shift-shot-desc">Tickets actively being repaired, with spare/needle requests raised if needed</p>
+                  </div>
+                </article>
+                <article class="shift-shot">
+                  <div class="shift-shot-media">
+                    <img class="shift-themed-image" src="assets/MM_Screens/Issues/Issue_3.Dark.png" data-dark-src="assets/MM_Screens/Issues/Issue_3.Dark.png" data-light-src="assets/MM_Screens/Issues/Issue_3.White.png" alt="Repair progress screen">
+                  </div>
+                  <div class="shift-shot-copy">
+                    <p class="shift-shot-title">Pending</p>
+                    <p class="shift-shot-desc">Completed repairs awaiting supervisor approval</p>
+                  </div>
+                </article>
+                <article class="shift-shot">
+                  <div class="shift-shot-media">
+                    <img class="shift-themed-image" src="assets/MM_Screens/Issues/Issue_4.Dark.png" data-dark-src="assets/MM_Screens/Issues/Issue_4.Dark.png" data-light-src="assets/MM_Screens/Issues/Issue_4.White.png" alt="Resolve and update screen">
+                  </div>
+                  <div class="shift-shot-copy">
+                    <p class="shift-shot-title">Repaired</p>
+                    <p class="shift-shot-desc">Closed tickets stored for history, audits, or re-issue</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <div class="solution-subsection-divider">
+              <p class="solution-mini-heading">Inventory Decisions, Simplified (Desktop)</p>
+              <div class="solution-controls">
+                <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="web-gallery" data-mode="dark" aria-label="Toggle inventory desktop screens theme">
+                  <span class="section-toggle-label">Dark</span>
+                  <span class="toggle-track">
+                    <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                  </span>
+                </button>
+                <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="web-gallery">
+                  <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                  </svg>
+                  Expand screens
+                </button>
+              </div>
+              <div class="shift-gallery shift-gallery-single" id="web-gallery" data-section-gallery>
+                <article class="shift-shot web-shot">
+                  <div class="shift-shot-media">
+                    <img class="shift-themed-image" src="assets/MM_Screens/Web/Web_Dark.png" data-dark-src="assets/MM_Screens/Web/Web_Dark.png" data-light-src="assets/MM_Screens/Web/Web_White.png" alt="Inventory decisions desktop dashboard">
+                  </div>
+                  <div class="shift-shot-copy">
+                    <p class="shift-shot-title">Approval Controls Designed for Speed & Accuracy</p>
+                    <p class="shift-shot-desc">Managers were opening a separate spreadsheet to check stock before approving each request. Surfacing the requested vs in-stock counter inline removed that entirely - approvals went from a multi-step process to a single confident tap.</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <div class="tradeoff">I considered a free-text description field when raising a ticket. We cut it. Typing under time pressure, on a shared device, in a loud environment, produces garbage data. Selecting a predefined issue type was faster, more consistent, and more useful for analytics downstream.</div>
+          </article>
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">02</p><p class="pillar-title">Preventive Maintenance</p></div>
+            <p class="case-p">Breakdowns were the loudest problem, but missed routine maintenance was often the underlying cause. Lubrication cycles, needle replacements, belt checks - all tracked on paper charts nobody reliably updated.</p>
+            <p class="case-p">Each machine is assigned a maintenance cycle. These auto-generate scheduled tickets on the mechanic's device. Mechanics complete a binary checklist - done or not done. Any issue found can instantly convert into a breakdown ticket.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="maintenance-gallery" data-mode="dark" aria-label="Toggle preventive maintenance screen theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                </span>
+              </button>
+              <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="maintenance-gallery">
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                </svg>
+                Expand screens
+              </button>
+            </div>
+            <div class="shift-gallery" id="maintenance-gallery" data-section-gallery>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Maintenance/Maintenance_1.Dark.png" data-dark-src="assets/MM_Screens/Maintenance/Maintenance_1.Dark.png" data-light-src="assets/MM_Screens/Maintenance/Maintenance_1.White.png" alt="Upcoming maintenance tasks screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Upcoming</p>
+                  <p class="shift-shot-desc">Scheduled maintenance tasks, ordered by due time</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Maintenance/Maintenance_2.Dark-1.png" data-dark-src="assets/MM_Screens/Maintenance/Maintenance_2.Dark-1.png" data-light-src="assets/MM_Screens/Maintenance/Maintenance_2.White.png" alt="In-progress maintenance tasks screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">In-Progress</p>
+                  <p class="shift-shot-desc">Active tasks with checklist based execution</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Maintenance/Maintenance_3.Dark-2.png" data-dark-src="assets/MM_Screens/Maintenance/Maintenance_3.Dark-2.png" data-light-src="assets/MM_Screens/Maintenance/Maintenance_3.White.png" alt="Completed maintenance tasks screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Completed</p>
+                  <p class="shift-shot-desc">Maintenance history with completed activity logs</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Maintenance/Maintenance_1.Dark-4.png" data-dark-src="assets/MM_Screens/Maintenance/Maintenance_1.Dark-4.png" data-light-src="assets/MM_Screens/Maintenance/Maintenance_4.White.png" alt="Overdue maintenance tasks screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Overdue</p>
+                  <p class="shift-shot-desc">Delayed tasks highlighted for urgent action</p>
+                </div>
+              </article>
+            </div>
+            <div class="tradeoff">The first version had free-form note fields for mechanics. Usage was near-zero. Moving to a binary checklist brought completion rates from inconsistent to near-100% - and when a mechanic did flag an issue, it became a proper breakdown ticket with full traceability.</div>
+          </article>
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">03</p><p class="pillar-title">Line Management</p></div>
+            <p class="case-p">Production lines are reconfigured constantly - machines move, orders change, setups shift. A machine that exists on paper but isn't assigned to a line is invisible. You can't plan maintenance for it, track its downtime, or audit when something goes wrong.</p>
+            <p class="case-p">Supervisors create production lines, assign machines to workstations, and manage changes as orders shift. The QR scan-to-assign flow came directly from floor observation - typing serial IDs was a known failure point in earlier tools.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="line-gallery" data-mode="dark" aria-label="Toggle line management screen theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                </span>
+              </button>
+              <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="line-gallery">
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                </svg>
+                Expand screens
+              </button>
+            </div>
+            <div class="shift-gallery" id="line-gallery" data-section-gallery>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Linesetup/Line Setup_1.Dark.png" data-dark-src="assets/MM_Screens/Linesetup/Line Setup_1.Dark.png" data-light-src="assets/MM_Screens/Linesetup/Line Setup_1.White.png" alt="Line listing screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Line Listing</p>
+                  <p class="shift-shot-desc">Select a production line to configure workstations. Reset an entire line when order requirements change.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Linesetup/Line Setup_2.Dark.png" data-dark-src="assets/MM_Screens/Linesetup/Line Setup_2.Dark.png" data-light-src="assets/MM_Screens/Linesetup/Line Setup_2.White.png" alt="Workstation overview screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Workstation Overview</p>
+                  <p class="shift-shot-desc">Machines are arranged in production sequence. Supports sub-workstations for flexible line setups.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Linesetup/Line Setup_3.Dark.png" data-dark-src="assets/MM_Screens/Linesetup/Line Setup_3.Dark.png" data-light-src="assets/MM_Screens/Linesetup/Line Setup_3.White.png" alt="Workstation setup screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Workstation Setup</p>
+                  <p class="shift-shot-desc">Add workstations above or below to maintain order. Add sub-workstations and assign machines within the flow.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Linesetup/Line Setup_4.Dark.png" data-dark-src="assets/MM_Screens/Linesetup/Line Setup_4.Dark.png" data-light-src="assets/MM_Screens/Linesetup/Line Setup_4.White.png" alt="Workstation actions screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Workstation Actions</p>
+                  <p class="shift-shot-desc">Select workstations to manage changes. Replace machines, clear machines, or delete workstations.</p>
+                </div>
+              </article>
+            </div>
+          </article>
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">04</p><p class="pillar-title">Shift Management</p></div>
+            <p class="case-p">Factories frequently run overtime - rush orders, peak seasons, audit prep. When machines ran extended hours with no record of it, maintenance schedules drifted and wear became unpredictable. Supervisors can now log standard and non-standard shifts per production line, which feeds directly into maintenance scheduling and load analysis.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="shift-gallery" data-mode="dark" aria-label="Toggle shift management screen theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                </span>
+              </button>
+              <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="shift-gallery">
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                </svg>
+                Expand screens
+              </button>
+            </div>
+            <div class="shift-gallery" id="shift-gallery" data-section-gallery>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Line/Line_1.Dark.png" data-dark-src="assets/MM_Screens/Line/Line_1.Dark.png" data-light-src="assets/MM_Screens/Line/Line_1.White.png" alt="Shift overview by line screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Shift Overview by Line</p>
+                  <p class="shift-shot-desc">Lists all production lines with shift timings and clear tags for overtime or off-standard additions.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Line/Line_2.Dark.png" data-dark-src="assets/MM_Screens/Line/Line_2.Dark.png" data-light-src="assets/MM_Screens/Line/Line_2.White.png" alt="Overtime details view screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Overtime Details View</p>
+                  <p class="shift-shot-desc">Expands a line to show added overtime/Off standard shifts and their exact time ranges.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Line/Line_3.Dark.png" data-dark-src="assets/MM_Screens/Line/Line_3.Dark.png" data-light-src="assets/MM_Screens/Line/Line_3.White.png" alt="Add overtime flow screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Add Overtime Flow</p>
+                  <p class="shift-shot-desc">Allows supervisors to quickly add overtime by selecting lines and defining start and end times.</p>
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/Line/Line_4.Dark.png" data-dark-src="assets/MM_Screens/Line/Line_4.Dark.png" data-light-src="assets/MM_Screens/Line/Line_4.White.png" alt="Add off-standard shift screen">
+                </div>
+                <div class="shift-shot-copy">
+                  <p class="shift-shot-title">Add Off-Standard Shift</p>
+                  <p class="shift-shot-desc">Enables supervisors to log off-standard working hours by selecting lines and defining non-regular shift timings.</p>
+                </div>
+              </article>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-section" id="mm-outcome">
+        <h2 class="case-h2">Outcome</h2>
+        <p class="case-h3">What we achieved</p>
+        <p class="case-p">Factories moved from reactive maintenance to trackable operations with ownership, timestamps, and historical trends across breakdowns and part usage.</p>
+        <div class="case-metric-grid">
+          <div class="case-metric"><p class="case-metric-value">60%</p><p class="case-metric-label">Reduction in machine downtime after rollout.</p></div>
+          <div class="case-metric"><p class="case-metric-value">20+</p><p class="case-metric-label">Factories live across Asia.</p></div>
+          <div class="case-metric"><p class="case-metric-value">$12k</p><p class="case-metric-label">MRR from maintenance as a standalone vertical.</p></div>
+          <div class="case-metric"><p class="case-metric-value">0</p><p class="case-metric-label">Paper records remaining in the maintenance workflow.</p></div>
+        </div>
+        <div class="unexpected">
+          <p class="unexpected-tag">Unexpected outcome</p>
+          <p class="case-p">Once factories had 6-12 months of machine health data, something we didn't design for started happening: procurement decisions changed. Factories could see which machine brands broke down most frequently, which had the highest parts consumption, and which held up across extended shifts. Purchase decisions that had always been made on price started being made on reliability data. A maintenance tool became a procurement intelligence layer.</p>
+        </div>
+      </section>
+
+      <section class="case-section" id="mm-looking-back">
+        <h2 class="case-h2">looking back</h2>
+        <p class="case-h3">What I'd do differently</p>
+        <div class="reflection-item">
+          <p class="insight-title">Get to real users faster</p>
+          <p class="case-p">Early research was mostly filtered through product and delivery teams - not the mechanics and supervisors themselves. We iterated on the ticket card layout multiple times post-launch because real floor users parsed status differently than we expected. Structured observation sessions on the factory floor, earlier, would have caught that.</p>
+        </div>
+        <div class="reflection-item">
+          <p class="insight-title">The inventory manager's workflow was only half-solved</p>
+          <p class="case-p">The desktop dashboard handled approvals well, but inventory managers were still maintaining separate spreadsheets for procurement. The more complete version of this product connects maintenance data directly to purchase orders - closing the loop that the unexpected outcome above started to reveal.</p>
+        </div>
+      </section>
+
+      <section class="other-projects" id="mm-other-projects">
+        <h2 class="case-h2">Other Projects</h2>
+        <div class="other-project-grid">
+          <a class="other-project-card" href="portfolio.html#cs-fabric-inspection">
+            <p class="other-project-title">Fabric Inspection System</p>
+            <p class="other-project-desc">Inspection workflow for operators identifying defects across fabric rolls, designed for speed, accuracy, and real-time quality decisions on production floors.</p>
+            <p class="other-project-cta">View case study →</p>
+          </a>
+          <a class="other-project-card" href="warehouse-management.html">
+            <p class="other-project-title">Warehouse Management System</p>
+            <p class="other-project-desc">End-to-end warehouse operations for inventory tracking, space planning, and role-based workflows across high-density enterprise factory environments.</p>
+            <p class="other-project-cta">View case study →</p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div class="screen-modal" id="screen-modal" hidden>
+  <div class="screen-modal-backdrop" data-action="close-modal"></div>
+  <div class="screen-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="screen-modal-title">
+    <div class="screen-modal-head">
+      <p class="screen-modal-title" id="screen-modal-title">Enlarged screens</p>
+      <button class="solution-control-btn" type="button" data-action="close-modal">Minimise</button>
+    </div>
+    <div class="screen-modal-body" id="screen-modal-body"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <span class="footer-l">© 2026 Gaurav Borra</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/gaurav-reddy" class="footer-link">LinkedIn</a>
+      <a href="portfolio.html" class="footer-link">Back to Home</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function applyThemedImagesIn(container, theme) {
+  const useLight = theme === 'light';
+  container.querySelectorAll('.shift-themed-image').forEach((img) => {
+    const nextSrc = useLight ? img.dataset.lightSrc : img.dataset.darkSrc;
+    if (nextSrc && img.getAttribute('src') !== nextSrc) img.setAttribute('src', nextSrc);
+  });
+}
+
+function getActiveGalleryTheme(galleryId, siteTheme) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return siteTheme;
+  return gallery.dataset.localTheme || siteTheme;
+}
+
+function updateGalleryToggleLabel(galleryId, siteTheme) {
+  const toggle = document.querySelector(`.section-theme-toggle[data-target-gallery="${galleryId}"]`);
+  if (!toggle) return;
+  const activeTheme = getActiveGalleryTheme(galleryId, siteTheme);
+  toggle.dataset.mode = activeTheme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = toggle.querySelector('.section-toggle-icon');
+  if (label) label.textContent = activeTheme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = activeTheme === 'light' ? '☀' : '☽';
+}
+
+function applyGalleryTheme(galleryId, siteTheme) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return;
+  const activeTheme = gallery.dataset.localTheme || siteTheme;
+  applyThemedImagesIn(gallery, activeTheme);
+  updateGalleryToggleLabel(galleryId, siteTheme);
+}
+
+function applyAllSectionGalleries(siteTheme) {
+  document.querySelectorAll('[data-section-gallery]').forEach((gallery) => {
+    applyGalleryTheme(gallery.id, siteTheme);
+  });
+}
+
+function openGalleryModal(galleryId, siteTheme) {
+  const gallery = document.getElementById(galleryId);
+  const modal = document.getElementById('screen-modal');
+  const modalBody = document.getElementById('screen-modal-body');
+  const modalTitle = document.getElementById('screen-modal-title');
+  if (!gallery || !modal || !modalBody || !modalTitle) return;
+  const pillar = gallery.closest('.pillar');
+  const title = pillar ? pillar.querySelector('.pillar-title') : null;
+  modalTitle.textContent = title ? `${title.textContent} - Enlarged screens` : 'Enlarged screens';
+  modalBody.innerHTML = '';
+  const clone = gallery.cloneNode(true);
+  clone.removeAttribute('id');
+  modalBody.appendChild(clone);
+  applyThemedImagesIn(modalBody, getActiveGalleryTheme(galleryId, siteTheme));
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeGalleryModal() {
+  const modal = document.getElementById('screen-modal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  const next = isLight ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  applyAllSectionGalleries(next);
+  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+  document.getElementById('toggle-icon').textContent = isLight ? '☽' : '☀';
+  try { localStorage.setItem('gb-theme', next); } catch(e) {}
+}
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+  const action = button.dataset.action;
+  const galleryId = button.dataset.targetGallery;
+  const siteTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  if (action === 'toggle-gallery-theme' && galleryId) {
+    const gallery = document.getElementById(galleryId);
+    if (!gallery) return;
+    const activeTheme = getActiveGalleryTheme(galleryId, siteTheme);
+    gallery.dataset.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    applyGalleryTheme(galleryId, siteTheme);
+    return;
+  }
+  if (action === 'expand-gallery' && galleryId) {
+    openGalleryModal(galleryId, siteTheme);
+    return;
+  }
+  if (action === 'close-modal') {
+    closeGalleryModal();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeGalleryModal();
+});
+
+function updateSideNavActiveLink() {
+  const links = Array.from(document.querySelectorAll('.case-side-link[href^="#"]'));
+  if (!links.length) return;
+  const sections = links
+    .map((link) => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+  const marker = window.scrollY + 120;
+  let activeId = null;
+  sections.forEach((section) => {
+    if (section.offsetTop <= marker) activeId = section.id;
+  });
+  if (!activeId && sections[0]) activeId = sections[0].id;
+  links.forEach((link) => {
+    const isActive = link.getAttribute('href') === `#${activeId}`;
+    link.classList.toggle('is-active', isActive);
+  });
+}
+
+window.addEventListener('scroll', updateSideNavActiveLink, { passive: true });
+window.addEventListener('resize', updateSideNavActiveLink);
+
+(function() {
+  try {
+    const saved = localStorage.getItem('gb-theme');
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+      applyAllSectionGalleries(saved);
+      const label = document.getElementById('theme-label');
+      const icon = document.getElementById('toggle-icon');
+      if (label) label.textContent = saved === 'light' ? 'Light' : 'Dark';
+      if (icon) icon.textContent = saved === 'light' ? '☀' : '☽';
+      updateSideNavActiveLink();
+      return;
+    }
+  } catch(e) {}
+  applyAllSectionGalleries(document.documentElement.getAttribute('data-theme') || 'dark');
+  updateSideNavActiveLink();
+})();
+</script>
+</body>
+</html>

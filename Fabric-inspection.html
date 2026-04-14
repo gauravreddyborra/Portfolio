@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabric Inspection Case Study - Gaurav Borra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[data-theme="dark"] {
+  --bg: #0e0e0c;
+  --bg2: #161614;
+  --bg3: #1c1c19;
+  --card: #141412;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #f0ede6;
+  --text-muted: #60605a;
+  --text-mid: #a0a09a;
+  --accent: #c8f76b;
+  --accent-soft-bg: rgba(200, 247, 107, 0.09);
+  --accent-soft-border: rgba(200, 247, 107, 0.2);
+  --accent-soft-text: #d5eca7;
+  --nav-bg: rgba(14,14,12,0.96);
+  --toggle-bg: #222220;
+  --toggle-border: rgba(255,255,255,0.1);
+  --toggle-knob: #f0ede6;
+}
+[data-theme="light"] {
+  --bg: #faf9f6;
+  --bg2: #f0ede6;
+  --bg3: #e8e5de;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.07);
+  --border-hover: rgba(0,0,0,0.14);
+  --text: #141410;
+  --text-muted: #909088;
+  --text-mid: #4c4c48;
+  --accent: #4a8a10;
+  --accent-soft-bg: rgba(74, 138, 16, 0.08);
+  --accent-soft-border: rgba(74, 138, 16, 0.2);
+  --accent-soft-text: #446f1c;
+  --nav-bg: rgba(244,242,237,0.96);
+  --toggle-bg: #e0ddd6;
+  --toggle-border: rgba(0,0,0,0.1);
+  --toggle-knob: #141410;
+}
+:root {
+  --serif: 'Fraunces', Georgia, serif;
+  --mono: 'Geist', monospace;
+  --sans: 'Geist', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+.case-back {
+  position: fixed; top: 10px; left: 10px; z-index: 140;
+  display: inline-flex; align-items: center; gap: 0.38rem;
+  padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--nav-bg); color: var(--text-mid);
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.case-back:hover { color: var(--text); border-color: var(--border-hover); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.25rem; }
+.nav { position: sticky; top: 0; z-index: 100; background: var(--nav-bg); backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); }
+.nav .wrap { height: 64px; display: flex; justify-content: space-between; align-items: center; }
+.nav-logo {
+  font-family: var(--serif); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 1px; }
+.nav-link {
+  display: flex; align-items: center; gap: 5px; padding: 5px 11px; font-size: 11.5px; font-weight: 500;
+  color: var(--text-muted); letter-spacing: 0.04em; border: 1px solid transparent; border-radius: 6px;
+}
+.nav-link:hover { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.nav-num { font-family: var(--mono); font-size: 9px; color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 1.25rem; }
+.theme-toggle { display: flex; align-items: center; gap: 7px; cursor: pointer; user-select: none; }
+.toggle-track {
+  width: 38px; height: 21px; background: var(--toggle-bg); border: 1px solid var(--toggle-border); border-radius: 100px; position: relative;
+}
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--toggle-knob); transition: transform 0.25s; display: flex; align-items: center; justify-content: center; font-size: 8px;
+}
+[data-theme="light"] .theme-toggle .toggle-knob { transform: translateX(17px); }
+.toggle-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; width: 26px; }
+.case-page { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%); }
+.case-wrap {
+  max-width: 1080px; margin: 0 auto; padding: 4.2rem 1.25rem; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 3rem;
+}
+.case-side { position: sticky; top: 88px; align-self: start; border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem 0.95rem; }
+.case-side-eyebrow { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 9.5px; color: var(--accent); margin-bottom: 0.45rem; }
+.case-side-title { font-family: var(--serif); font-size: 1.05rem; line-height: 1.25; margin-bottom: 1rem; }
+.case-side-nav { display: flex; flex-direction: column; gap: 0.38rem; }
+.case-side-link { font-size: 12px; color: var(--text-mid); border: 1px solid transparent; border-radius: 6px; padding: 0.45rem 0.55rem; }
+.case-side-link:hover { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.case-side-link.is-active { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.case-header { padding-bottom: 2.2rem; border-bottom: 1px solid var(--border); }
+.case-kicker { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 10px; color: var(--accent); margin-bottom: 0.7rem; }
+.case-title { font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.35rem); line-height: 1.05; margin-bottom: 1rem; }
+.case-title em { font-style: normal; opacity: 0.6; }
+.case-subtitle { font-size: 14px; line-height: 1.9; color: var(--text-mid); max-width: 75ch; }
+.case-section { padding: 2.3rem 0; border-bottom: 1px solid var(--border); scroll-margin-top: 72px; }
+.case-h2 { font-size: 12px; line-height: 1.4; font-weight: 500; letter-spacing: 0.03em; color: var(--text-mid); margin-bottom: 0.65rem; }
+.case-h3 { font-family: var(--serif); font-size: clamp(1.45rem, 3.2vw, 2.15rem); line-height: 1.2; margin: 0 0 1rem; }
+.case-p { font-size: 14px; line-height: 1.85; color: var(--text-mid); margin-bottom: 0.85rem; }
+.problem-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.case-card { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.case-card-title { font-size: 14px; margin-bottom: 0.35rem; font-weight: 500; color: var(--text); }
+.case-card-text { font-size: 13px; line-height: 1.7; color: var(--text-mid); }
+.insight-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+.insight { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 0.9rem; border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.insight-num { font-family: var(--serif); font-size: 13px; color: var(--text-muted); }
+.insight-title { font-size: 14px; font-weight: 600; margin-bottom: 0.35rem; }
+.insight-decision {
+  margin-top: 0.55rem; display: inline-block; font-size: 12px; line-height: 1.55; color: var(--accent-soft-text);
+  background: var(--accent-soft-bg); border: 1px solid var(--accent-soft-border); border-radius: 7px; padding: 0.38rem 0.56rem;
+}
+.pillars { display: flex; flex-direction: column; gap: 1.6rem; }
+.pillar { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.pillar-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; }
+.pillar-num { font-family: var(--serif); font-size: 13px; color: var(--text-muted); }
+.pillar-title { font-size: 14px; font-weight: 600; }
+.screen-row { display: grid; gap: 1rem; margin-top: 0.8rem; }
+.screen-row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.screen-row-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.solution-controls { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.85rem; }
+.section-theme-toggle {
+  border: 0; background: transparent; padding: 0; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; user-select: none;
+}
+.section-theme-toggle .toggle-track {
+  width: 38px; height: 21px; background: var(--toggle-bg); border: 1px solid var(--toggle-border); border-radius: 100px; position: relative;
+}
+.section-theme-toggle .toggle-knob {
+  position: absolute; top: 3px; left: 3px; width: 13px; height: 13px; border-radius: 50%; background: var(--toggle-knob);
+  transition: transform 0.25s; display: flex; align-items: center; justify-content: center; font-size: 8px;
+}
+.section-theme-toggle[data-mode="light"] .toggle-knob { transform: translateX(17px); }
+.section-toggle-label {
+  font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; width: 34px;
+}
+.lrs-carousel {
+  margin-top: 0.9rem; border: 0; border-radius: 0; background: transparent; padding: 0;
+}
+.lrs-stage-shell {
+  position: relative;
+}
+.lrs-stage {
+  position: relative; border: 0; border-radius: 10px; background: var(--bg2); overflow: hidden;
+}
+.lrs-image {
+  width: 95%; margin: 0 auto; display: block; transition: transform 0.34s ease; will-change: transform; backface-visibility: hidden;
+}
+.lrs-image-incoming {
+  position: absolute; top: 0; left: 2.5%; width: 95%; z-index: 2; pointer-events: none;
+}
+.lrs-nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 1px solid var(--border); background: rgba(0,0,0,0.28); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; z-index: 5;
+}
+.lrs-nav-btn:hover { background: rgba(0,0,0,0.42); }
+.lrs-nav-prev { left: -0.7rem; }
+.lrs-nav-next { right: -0.7rem; }
+.lrs-dots { margin-top: 0.7rem; display: flex; justify-content: center; gap: 0.4rem; }
+.lrs-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-hover); }
+.lrs-dot.is-active { background: var(--accent); }
+.sub-pillar {
+  margin-top: 1.15rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+.sub-pillar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.case-placeholder {
+  border: 1px dashed var(--border-hover); border-radius: 10px; background: var(--bg3); min-height: 130px;
+  display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-muted); font-family: var(--mono);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; padding: 1rem;
+}
+.tradeoff { margin-top: 0.9rem; border-left: 2px solid var(--border-hover); background: var(--bg3); border-radius: 0 8px 8px 0; padding: 0.7rem 0.85rem; font-size: 13px; line-height: 1.75; color: var(--text-mid); }
+.case-metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.case-metric { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.case-metric-value { font-family: var(--sans); font-size: 1.6rem; margin-bottom: 0.4rem; }
+.case-metric-label { font-size: 12.5px; line-height: 1.65; color: var(--text-mid); }
+.meta-row {
+  display: flex;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  margin-top: 1.35rem;
+}
+.meta-key {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+.meta-val {
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.unexpected { margin-top: 1rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg3); padding: 1rem; }
+.unexpected-tag { font-size: 13px; color: var(--text); margin-bottom: 0.55rem; font-weight: 500; }
+.reflection-item { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.reflection-item:last-child { border-bottom: 0; }
+.other-projects { margin-top: 3.4rem; padding-top: 2.2rem; border-top: 1px solid var(--border); }
+.other-project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 0.95rem; }
+.other-project-card { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; transition: all 0.18s ease; }
+.other-project-card:hover { border-color: var(--border-hover); background: var(--bg2); }
+.other-project-title { font-size: 14px; font-weight: 600; margin-bottom: 0.45rem; }
+.other-project-desc { font-size: 13px; line-height: 1.7; color: var(--text-mid); margin-bottom: 0.8rem; }
+.other-project-cta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; color: var(--accent); }
+.footer .wrap { padding-top: 1.6rem; padding-bottom: 1.6rem; display: flex; justify-content: space-between; align-items: center; }
+.footer-l, .footer-link { font-family: var(--mono); font-size: 10.5px; color: var(--text-muted); letter-spacing: 0.03em; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-link:hover { color: var(--accent); }
+@media (max-width: 930px) {
+  .case-wrap { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 3.1rem; padding-bottom: 3.1rem; }
+  .case-side { position: static; }
+  .case-side-nav { flex-direction: row; flex-wrap: wrap; }
+}
+@media (max-width: 700px) {
+  .problem-grid, .case-metric-grid, .screen-row-2, .screen-row-3, .other-project-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body id="top">
+<a href="portfolio.html" class="case-back" aria-label="Back to home">← Back</a>
+<nav class="nav">
+  <div class="wrap">
+    <a href="portfolio.html" class="nav-logo" aria-label="Go to home">GB</a>
+    <div class="nav-links">
+      <a href="portfolio.html#work" class="nav-link"><span class="nav-num">01</span> Work</a>
+      <a href="portfolio.html#experience" class="nav-link"><span class="nav-num">02</span> Experience</a>
+      <a href="portfolio.html#about" class="nav-link"><span class="nav-num">03</span> About</a>
+    </div>
+    <div class="nav-right">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="toggle-label" id="theme-label">Dark</span>
+        <div class="toggle-track"><div class="toggle-knob"><span id="toggle-icon">☽</span></div></div>
+      </div>
+    </div>
+  </div>
+</nav>
+<main class="case-page">
+  <div class="case-wrap">
+    <aside class="case-side">
+      <p class="case-side-eyebrow">Case Study</p>
+      <p class="case-side-title">Fabric Inspection System</p>
+      <nav class="case-side-nav">
+        <a class="case-side-link" href="#top">Context</a>
+        <a class="case-side-link" href="#fi-problem">Problem</a>
+        <a class="case-side-link" href="#fi-learnings">What I Learned</a>
+        <a class="case-side-link" href="#fi-design">The Design</a>
+        <a class="case-side-link" href="#fi-outcome">Outcome</a>
+        <a class="case-side-link" href="#fi-looking-back">Looking Back</a>
+      </nav>
+    </aside>
+    <div class="case-main">
+      <header class="case-header" id="fi-context">
+        <p class="case-kicker">Fabric Inspection System - Solvei8</p>
+        <h1 class="case-title">Bad fabric doesn't get caught at the machine - <em>it gets caught too late</em></h1>
+        <p class="case-subtitle">Quality inspectors were using a third-party tool with deep navigation, small touch targets, and no connection to the rest of the factory. I redesigned inspection as a touch-first kiosk system, cutting inspection time by 35–45% and bringing quality data into the factory's core platform for the first time.</p>
+        <div class="case-metric-grid">
+          <div class="case-metric"><p class="case-metric-value">35-45%</p><p class="case-metric-label">Improvement in inspection efficiency</p></div>
+          <div class="case-metric"><p class="case-metric-value">50+</p><p class="case-metric-label">Factories live across Asia</p></div>
+          <div class="case-metric"><p class="case-metric-value">$60k</p><p class="case-metric-label">Tracki8 MRR, with fabric inspection adding ~$150-200 per factory</p></div>
+          <div class="case-metric"><p class="case-metric-value">Kiosk</p><p class="case-metric-label">Touch-first workflow for floor teams</p></div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-item">
+            <p class="meta-key">Role</p>
+            <p class="meta-val">Sole designer — end to end</p>
+          </div>
+          <div class="meta-item">
+            <p class="meta-key">Platform</p>
+            <p class="meta-val">Kiosk (touch-first) + Desktop</p>
+          </div>
+          <div class="meta-item">
+            <p class="meta-key">Type</p>
+            <p class="meta-val">B2B SaaS — platform module</p>
+          </div>
+        </div>
+      </header>
+      <section class="case-section" id="fi-problem">
+        <h2 class="case-h2">Problem</h2>
+        <p class="case-h3">The tool slowed down the work it was supposed to support</p>
+        <p class="case-p">Fabric inspection is the first quality checkpoint before production begins. If a defective roll makes it through, the problem surfaces hours later — during cutting, sewing, or worse, at the client's end.</p>
+        <p class="case-p">Inspectors were using a third-party tool that wasn't built for factory floors. It worked, technically. But it made every inspection harder than it needed to be.</p>
+        <div class="tradeoff">The issue wasn't correctness. It was speed, usability, and integration — all three failing at once.</div>
+        <div class="problem-grid">
+          <div class="case-card"><p class="case-card-title">Too many steps per roll</p><p class="case-card-text">Deep navigation and repeated confirmations turned a routine task into a slow, frustrating process across hundreds of rolls a day.</p></div>
+          <div class="case-card"><p class="case-card-title">Not built for factory workers</p><p class="case-card-text">Small buttons, dense interfaces, and too much reading forced inspectors to think about the tool instead of the fabric.</p></div>
+          <div class="case-card"><p class="case-card-title">Data stayed isolated</p><p class="case-card-text">Inspection results lived outside the main platform, so cutting and packing teams could not act on quality data in real time.</p></div>
+          <div class="case-card"><p class="case-card-title">No support for edge cases</p><p class="case-card-text">Split rolls, commercial overrides, and partial lots were handled through manual workarounds outside the system.</p></div>
+        </div>
+      </section>
+      <section class="case-section" id="fi-learnings">
+        <h2 class="case-h2">What I Learned</h2>
+        <p class="case-h3">Three constraints that shaped every decision</p>
+        <p class="case-p">Direct access to inspectors was restricted — I couldn't sit with them or run usability tests. Insights came through delivery teams, training staff, and on-ground observers. That constraint forced sharper decisions upfront.</p>
+        <div class="insight-list">
+          <article class="insight">
+            <p class="insight-num">01</p>
+            <div>
+              <p class="insight-title">Inspectors think in actions, not screens</p>
+              <p class="case-p">Inspectors aren't navigating an app — they're completing a task. Every extra screen, confirmation, or mode switch is friction that compounds across hundreds of rolls a day. The system needed to disappear into the work.</p>
+              <p class="insight-decision">Every screen reduced to a single next action. No dead ends, no back-tracking.</p>
+            </div>
+          </article>
+          <article class="insight">
+            <p class="insight-num">02</p>
+            <div>
+              <p class="insight-title">The kiosk context changes everything</p>
+              <p class="case-p">Inspectors work standing up, hands often occupied, on a large touch screen. Small targets aren't just annoying — they cause real mistakes that affect downstream quality data. Keyboard input on a kiosk is slow and error-prone.</p>
+              <p class="insight-decision">Large tappable buttons, predefined options, numeric keypads only. No free-text in the critical path.</p>
+            </div>
+          </article>
+          <article class="insight">
+            <p class="insight-num">03</p>
+            <div>
+              <p class="insight-title">The system didn't match how factories actually work</p>
+              <p class="case-p">Split rolls, commercial approvals on failed lots, buyer-specific grading thresholds — none of these were supported. Inspectors had built workarounds that lived entirely outside the system, which meant the data was always incomplete.</p>
+              <p class="insight-decision">Real factory scenarios designed in, not worked around — split rolls, overrides, and commercial approvals all handled inside the platform.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="case-section" id="fi-design">
+        <h2 class="case-h2">The Design</h2>
+        <p class="case-h3">Four flows, one philosophy: clarity over clutter</p>
+        <p class="case-p">The inspection system was rebuilt around how inspectors actually work: touch-first and task-focused, with every screen answering one question.</p>
+        <div class="pillars">
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">01</p><p class="pillar-title">Lot & Roll Selection</p></div>
+            <p class="case-p">Setting up an inspection should take seconds, not minutes. Inspectors select the supplier, buyer PO, style, and lot from large tappable options — no typing. They define the sampling percentage and 4.0 score threshold, and the system automatically calculates how many rolls to inspect based on industry-standard sampling logic.</p>
+            <p class="case-p">A live counter updates as rolls are selected and provides visual feedback when the selection limit is reached — no manual calculation, no over-inspection errors.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" id="lrs-theme-toggle" type="button" data-mode="dark" aria-label="Toggle lot and roll screens theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span id="lrs-toggle-icon">☽</span></span>
+                </span>
+              </button>
+            </div>
+            <div class="lrs-carousel" id="lrs-carousel">
+              <div class="lrs-stage-shell">
+                <button class="lrs-nav-btn lrs-nav-prev" type="button" id="lrs-prev" aria-label="Previous screen">‹</button>
+                <div class="lrs-stage">
+                  <img class="lrs-image" id="lrs-image" src="assets/MM_Screens/LRS/LRS_1.Dark.png" alt="Lot and roll selection screen">
+                </div>
+                <button class="lrs-nav-btn lrs-nav-next" type="button" id="lrs-next" aria-label="Next screen">›</button>
+              </div>
+              <div class="lrs-dots" id="lrs-dots">
+                <span class="lrs-dot is-active"></span>
+                <span class="lrs-dot"></span>
+                <span class="lrs-dot"></span>
+                <span class="lrs-dot"></span>
+                <span class="lrs-dot"></span>
+              </div>
+            </div>
+            <div class="tradeoff">System-calculated sampling limits eliminated a whole category of inspection errors — over-inspecting or under-inspecting a lot — before they could happen.</div>
+          </article>
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">02</p><p class="pillar-title">Fabric Defect Logging</p></div>
+            <p class="case-p">This is where most inspection time is spent. Common defects — slubs, knots, floats — are displayed as large, tappable buttons and logged by size slab, not free-form description. Holes use predefined size buckets. A live bottom panel updates the total points and 4.0 score in real time as defects are logged.</p>
+            <p class="case-p">A top tab switcher organises actions by inspection mindset: Fabric Defects, Holes, Fabric Dimensions. Inspectors switch contexts without losing their place or breaking their flow.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" id="fdl-theme-toggle" type="button" data-mode="dark" aria-label="Toggle fabric defect logging screens theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span id="fdl-toggle-icon">☽</span></span>
+                </span>
+              </button>
+            </div>
+            <div class="lrs-carousel" id="fdl-carousel">
+              <div class="lrs-stage-shell">
+                <button class="lrs-nav-btn lrs-nav-prev" type="button" id="fdl-prev" aria-label="Previous screen">‹</button>
+                <div class="lrs-stage">
+                  <img class="lrs-image" id="fdl-image" src="assets/MM_Screens/FDL/FDL_1.Dark.png" alt="Fabric defect logging screen">
+                </div>
+                <button class="lrs-nav-btn lrs-nav-next" type="button" id="fdl-next" aria-label="Next screen">›</button>
+              </div>
+              <div class="lrs-dots" id="fdl-dots">
+                <span class="lrs-dot is-active"></span>
+                <span class="lrs-dot"></span>
+                <span class="lrs-dot"></span>
+              </div>
+            </div>
+            <div class="tradeoff">The original system required inspectors to type defect descriptions. Switching to predefined categories felt like a loss of granularity at first — but data quality improved because selections were consistent across inspectors, not dependent on spelling or individual terminology.</div>
+            <div class="sub-pillar" id="fi-fabric-dimensions">
+              <p class="sub-pillar-title">Fabric Dimensions</p>
+              <p class="case-p">Inspectors switch to the Fabric Dimensions tab and enter three width readings - start, mid, end - plus the roll length. Actual values are compared against the ticket dimensions automatically. Any deviation adjusts the 4.0 score in real time.</p>
+              <p class="case-p">The entire flow uses guided numeric input via a large keypad - no form fields, no keyboard toggling. The goal was accuracy without slowing the inspector down between measurements.</p>
+              <div class="solution-controls">
+                <button class="section-theme-toggle" id="fdc-theme-toggle" type="button" data-mode="dark" aria-label="Toggle fabric dimensions screen theme">
+                  <span class="section-toggle-label">Dark</span>
+                  <span class="toggle-track">
+                    <span class="toggle-knob"><span id="fdc-toggle-icon">☽</span></span>
+                  </span>
+                </button>
+              </div>
+              <div class="lrs-carousel" id="fdc-carousel">
+                <div class="lrs-stage-shell">
+                  <div class="lrs-stage">
+                    <img class="lrs-image" id="fdc-image" src="assets/MM_Screens/FDC/FDC_Dark.png" alt="Fabric dimensions input screen">
+                  </div>
+                </div>
+              </div>
+              <div class="tradeoff">Optimised for touch input and accuracy - eliminating the need to toggle between keyboards mid-inspection kept the measurement step as fast as the defect logging step.</div>
+            </div>
+            <div class="sub-pillar" id="fi-split-roll">
+              <p class="sub-pillar-title">Split Roll Handling</p>
+              <p class="case-p">In real factories, rolls are often only partially usable. The old system had no concept of this - inspectors tracked splits on paper alongside the digital tool.</p>
+              <p class="case-p">The split roll flow is accessible directly during inspection. The inspector enters the split point on a large numeric keypad. The system shows exactly how the roll will be divided, warns if the actual length differs from the ticket, and auto-creates two independent rolls - each with its own inspection record, score, and decision.</p>
+              <div class="solution-controls">
+                <button class="section-theme-toggle" id="split-theme-toggle" type="button" data-mode="dark" aria-label="Toggle split roll screens theme">
+                  <span class="section-toggle-label">Dark</span>
+                  <span class="toggle-track">
+                    <span class="toggle-knob"><span id="split-toggle-icon">☽</span></span>
+                  </span>
+                </button>
+              </div>
+              <div class="lrs-carousel" id="split-carousel">
+                <div class="lrs-stage-shell">
+                  <button class="lrs-nav-btn lrs-nav-prev" type="button" id="split-prev" aria-label="Previous screen">‹</button>
+                  <div class="lrs-stage">
+                    <img class="lrs-image" id="split-image" src="assets/MM_Screens/Split/Split_1.Dark.png" alt="Split roll handling screen">
+                  </div>
+                  <button class="lrs-nav-btn lrs-nav-next" type="button" id="split-next" aria-label="Next screen">›</button>
+                </div>
+                <div class="lrs-dots" id="split-dots">
+                  <span class="lrs-dot is-active"></span>
+                  <span class="lrs-dot"></span>
+                </div>
+              </div>
+              <div class="tradeoff">A manual workaround that lived entirely outside the system was brought inside it. Both split rolls are now fully traceable - their own scores, their own decisions, their own audit trail.</div>
+            </div>
+          </article>
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">03</p><p class="pillar-title">Roll Grading & Lot Closure</p></div>
+            <p class="case-p">Each roll gets a system-calculated 4.0 score and pass/fail result, with controlled override support for commercial decisions and complete attribution.</p>
+            <p class="case-p">The override is intentional — buyer thresholds vary, and management sometimes instructs a pass on a borderline roll for commercial reasons. The system supports this without hiding it. Every override is logged, timestamped, and user-attributed.</p>
+            <p class="case-p">Once all sampled rolls are graded, a lot summary surfaces the pass/fail status of each roll with two final CTAs: Pass Lot or Fail Lot.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" id="rgo-theme-toggle" type="button" data-mode="dark" aria-label="Toggle roll grading screens theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span id="rgo-toggle-icon">☽</span></span>
+                </span>
+              </button>
+            </div>
+            <div class="lrs-carousel" id="rgo-carousel">
+              <div class="lrs-stage-shell">
+                <button class="lrs-nav-btn lrs-nav-prev" type="button" id="rgo-prev" aria-label="Previous screen">‹</button>
+                <div class="lrs-stage">
+                  <img class="lrs-image" id="rgo-image" src="assets/MM_Screens/RGO/RGO_1.Dark.png" alt="Roll grading and lot closure screen">
+                </div>
+                <button class="lrs-nav-btn lrs-nav-next" type="button" id="rgo-next" aria-label="Next screen">›</button>
+              </div>
+              <div class="lrs-dots" id="rgo-dots">
+                <span class="lrs-dot is-active"></span>
+                <span class="lrs-dot"></span>
+                <span class="lrs-dot"></span>
+              </div>
+            </div>
+            <div class="tradeoff">System judgment and human authority are separated by design - the machine scores, the person decides. This mirrors how factory decisions actually work, where business context sometimes overrides a data point.</div>
+          </article>
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">04</p><p class="pillar-title">Transaction Logs & Commercial Approvals</p></div>
+            <p class="case-p">Every action is timestamped: defect entry, score changes, overrides, and approvals. Failed lots can be revisited by authorized users with full audit visibility.</p>
+            <p class="case-p">This turned inspection data from a point-in-time snapshot into a traceable record that downstream teams in cutting, sewing, and packing could actually rely on.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" id="txn-theme-toggle" type="button" data-mode="dark" aria-label="Toggle transaction and approvals screens theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span id="txn-toggle-icon">☽</span></span>
+                </span>
+              </button>
+            </div>
+            <div class="lrs-carousel" id="txn-carousel">
+              <div class="lrs-stage-shell">
+                <button class="lrs-nav-btn lrs-nav-prev" type="button" id="txn-prev" aria-label="Previous screen">‹</button>
+                <div class="lrs-stage">
+                  <img class="lrs-image" id="txn-image" src="assets/MM_Screens/Transaction/Transaction_1.Dark.png" alt="Transaction logs and commercial approvals screen">
+                </div>
+                <button class="lrs-nav-btn lrs-nav-next" type="button" id="txn-next" aria-label="Next screen">›</button>
+              </div>
+              <div class="lrs-dots" id="txn-dots">
+                <span class="lrs-dot is-active"></span>
+                <span class="lrs-dot"></span>
+                <span class="lrs-dot"></span>
+              </div>
+            </div>
+            <div class="tradeoff">Auditability and decision authority are captured in one place - inspectors, quality teams, and commercial approvers all work from the same timestamped history.</div>
+          </article>
+        </div>
+      </section>
+      <section class="case-section" id="fi-outcome">
+        <h2 class="case-h2">Outcome</h2>
+        <p class="case-h3">35-45% faster inspections and usable quality data across teams</p>
+        <div class="case-metric-grid">
+          <div class="case-metric"><p class="case-metric-value">35-45%</p><p class="case-metric-label">Improvement in inspection efficiency post-rollout</p></div>
+          <div class="case-metric"><p class="case-metric-value">50+</p><p class="case-metric-label">Factories live across Asia</p></div>
+          <div class="case-metric"><p class="case-metric-value">$60k</p><p class="case-metric-label">Tracki8 MRR with FI module upsell</p></div>
+          <div class="case-metric"><p class="case-metric-value">0</p><p class="case-metric-label">Third-party inspection tools in onboarded factories</p></div>
+        </div>
+        <div class="unexpected">
+          <p class="unexpected-tag">Unexpected outcome</p>
+          <p class="case-p">Before this system, cutting and packing teams made decisions without visibility into fabric quality. Once inspection data lived inside the platform, that changed. Downstream teams could filter incoming fabric by lot score, flag borderline rolls before they reached production, and trace defects back to the specific supplier and batch. Inspection stopped being a gate and became a data source.</p>
+        </div>
+      </section>
+      <section class="case-section" id="fi-looking-back">
+        <h2 class="case-h2">Looking Back</h2>
+        <p class="case-h3">What I'd do differently</p>
+        <div class="reflection-item">
+          <p class="insight-title">Get closer to inspectors earlier</p>
+          <p class="case-p">Research was filtered through intermediaries — delivery teams and training staff — not the inspectors themselves. That worked, but it meant designing against described behaviour rather than observed behaviour. I'd push harder for even one day of direct floor access before committing to the core flows.</p>
+        </div>
+        <div class="reflection-item">
+          <p class="insight-title">Build the analytics layer sooner</p>
+          <p class="case-p">The logs capture everything, but dashboarding for supplier quality trends came later. Surfacing that layer earlier would have created quality intelligence value faster.</p>
+        </div>
+      </section>
+      <section class="other-projects">
+        <h2 class="case-h2">Other Projects</h2>
+        <div class="other-project-grid">
+          <a class="other-project-card" href="machine-maintenance.html">
+            <p class="other-project-title">Machine Maintenance Platform</p>
+            <p class="other-project-desc">Mobile-first maintenance coordination system for supervisors, mechanics, and inventory teams across factory floors.</p>
+            <p class="other-project-cta">View case study →</p>
+          </a>
+          <a class="other-project-card" href="warehouse-management.html">
+            <p class="other-project-title">Warehouse Management System</p>
+            <p class="other-project-desc">End-to-end warehouse operations for inventory tracking, role workflows, and space planning in high-density factory environments.</p>
+            <p class="other-project-cta">View case study →</p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <span class="footer-l">© 2026 Gaurav Borra</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/gaurav-reddy" class="footer-link">LinkedIn</a>
+      <a href="portfolio.html" class="footer-link">Back to Home</a>
+    </div>
+  </div>
+</footer>
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  const next = isLight ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+  document.getElementById('toggle-icon').textContent = isLight ? '☽' : '☀';
+  syncLrsToGlobalTheme(next);
+  syncFdlToGlobalTheme(next);
+  syncFdcToGlobalTheme(next);
+  syncRgoToGlobalTheme(next);
+  syncSplitToGlobalTheme(next);
+  syncTxnToGlobalTheme(next);
+  try { localStorage.setItem('gb-theme', next); } catch (e) {}
+}
+const lrsState = { index: 0, localTheme: null, total: 5, animating: false };
+const LRS_ASSET_VERSION = '20260412-3';
+const lrsPreloaded = new Set();
+const fdlState = { index: 0, localTheme: null, total: 3, animating: false };
+const FDL_ASSET_VERSION = '20260412-1';
+const fdlPreloaded = new Set();
+const fdcState = { localTheme: null };
+const FDC_ASSET_VERSION = '20260412-1';
+const fdcPreloaded = new Set();
+const rgoState = { index: 0, localTheme: null, total: 3, animating: false };
+const RGO_ASSET_VERSION = '20260412-1';
+const rgoPreloaded = new Set();
+const splitState = { index: 0, localTheme: null, total: 2, animating: false };
+const SPLIT_ASSET_VERSION = '20260412-2';
+const splitPreloaded = new Set();
+const txnState = { index: 0, localTheme: null, total: 3, animating: false };
+const TXN_ASSET_VERSION = '20260413-1';
+const txnPreloaded = new Set();
+function getLrsImagePath(index, theme) {
+  return `assets/MM_Screens/LRS/LRS_${index + 1}.${theme === 'light' ? 'White' : 'Dark'}.png?v=${LRS_ASSET_VERSION}`;
+}
+function preloadLrsTheme(theme) {
+  for (let i = 0; i < lrsState.total; i += 1) {
+    const src = getLrsImagePath(i, theme);
+    if (lrsPreloaded.has(src)) continue;
+    const img = new Image();
+    img.src = src;
+    lrsPreloaded.add(src);
+  }
+}
+function getFdlImagePath(index, theme) {
+  return `assets/MM_Screens/FDL/FDL_${index + 1}.${theme === 'light' ? 'White' : 'Dark'}.png?v=${FDL_ASSET_VERSION}`;
+}
+function preloadFdlTheme(theme) {
+  for (let i = 0; i < fdlState.total; i += 1) {
+    const src = getFdlImagePath(i, theme);
+    if (fdlPreloaded.has(src)) continue;
+    const img = new Image();
+    img.src = src;
+    fdlPreloaded.add(src);
+  }
+}
+function getFdcImagePath(theme) {
+  return `assets/MM_Screens/FDC/FDC_${theme === 'light' ? 'White' : 'Dark'}.png?v=${FDC_ASSET_VERSION}`;
+}
+function preloadFdcTheme(theme) {
+  const src = getFdcImagePath(theme);
+  if (fdcPreloaded.has(src)) return;
+  const img = new Image();
+  img.src = src;
+  fdcPreloaded.add(src);
+}
+function getRgoImagePath(index, theme) {
+  return `assets/MM_Screens/RGO/RGO_${index + 1}.${theme === 'light' ? 'White' : 'Dark'}.png?v=${RGO_ASSET_VERSION}`;
+}
+function preloadRgoTheme(theme) {
+  for (let i = 0; i < rgoState.total; i += 1) {
+    const src = getRgoImagePath(i, theme);
+    if (rgoPreloaded.has(src)) continue;
+    const img = new Image();
+    img.src = src;
+    rgoPreloaded.add(src);
+  }
+}
+function getSplitImagePath(index, theme) {
+  return `assets/MM_Screens/Split/Split_${index + 1}.${theme === 'light' ? 'White' : 'Dark'}.png?v=${SPLIT_ASSET_VERSION}`;
+}
+function preloadSplitTheme(theme) {
+  for (let i = 0; i < splitState.total; i += 1) {
+    const src = getSplitImagePath(i, theme);
+    if (splitPreloaded.has(src)) continue;
+    const img = new Image();
+    img.src = src;
+    splitPreloaded.add(src);
+  }
+}
+function getTxnImagePath(index, theme) {
+  return `assets/MM_Screens/Transaction/Transaction_${index + 1}.${theme === 'light' ? 'White' : 'Dark'}.png?v=${TXN_ASSET_VERSION}`;
+}
+function preloadTxnTheme(theme) {
+  for (let i = 0; i < txnState.total; i += 1) {
+    const src = getTxnImagePath(i, theme);
+    if (txnPreloaded.has(src)) continue;
+    const img = new Image();
+    img.src = src;
+    txnPreloaded.add(src);
+  }
+}
+function getLrsTheme(globalTheme) {
+  return lrsState.localTheme || globalTheme;
+}
+function getFdlTheme(globalTheme) {
+  return fdlState.localTheme || globalTheme;
+}
+function getFdcTheme(globalTheme) {
+  return fdcState.localTheme || globalTheme;
+}
+function getRgoTheme(globalTheme) {
+  return rgoState.localTheme || globalTheme;
+}
+function getSplitTheme(globalTheme) {
+  return splitState.localTheme || globalTheme;
+}
+function getTxnTheme(globalTheme) {
+  return txnState.localTheme || globalTheme;
+}
+function updateLrsThemeToggle(theme) {
+  const toggle = document.getElementById('lrs-theme-toggle');
+  if (!toggle) return;
+  toggle.dataset.mode = theme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = document.getElementById('lrs-toggle-icon');
+  if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = theme === 'light' ? '☀' : '☽';
+}
+function renderLrs() {
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getLrsTheme(globalTheme);
+  const image = document.getElementById('lrs-image');
+  if (image && !lrsState.animating) image.setAttribute('src', getLrsImagePath(lrsState.index, activeTheme));
+  const dots = Array.from(document.querySelectorAll('#lrs-dots .lrs-dot'));
+  dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === lrsState.index));
+  updateLrsThemeToggle(activeTheme);
+}
+function slideLrs(direction) {
+  if (lrsState.animating) return;
+  const stage = document.querySelector('#lrs-carousel .lrs-stage');
+  const current = document.getElementById('lrs-image');
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getLrsTheme(globalTheme);
+  if (!stage || !current) return;
+  const targetIndex = direction === 'next'
+    ? (lrsState.index + 1) % lrsState.total
+    : (lrsState.index - 1 + lrsState.total) % lrsState.total;
+  preloadLrsTheme(activeTheme);
+
+  const incoming = current.cloneNode(true);
+  incoming.removeAttribute('id');
+  incoming.classList.add('lrs-image-incoming');
+  incoming.setAttribute('src', getLrsImagePath(targetIndex, activeTheme));
+  incoming.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+  stage.appendChild(incoming);
+
+  lrsState.animating = true;
+  requestAnimationFrame(() => {
+    current.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+    incoming.style.transform = 'translateX(0)';
+  });
+
+  incoming.addEventListener('transitionend', () => {
+    lrsState.index = targetIndex;
+    current.setAttribute('src', getLrsImagePath(lrsState.index, activeTheme));
+    current.style.transition = 'none';
+    current.style.transform = 'translateX(0)';
+    void current.offsetWidth;
+    current.style.transition = '';
+    incoming.remove();
+    lrsState.animating = false;
+    renderLrs();
+  }, { once: true });
+}
+function syncLrsToGlobalTheme(globalTheme) {
+  if (!lrsState.localTheme) {
+    updateLrsThemeToggle(globalTheme);
+    renderLrs();
+  }
+}
+function updateFdlThemeToggle(theme) {
+  const toggle = document.getElementById('fdl-theme-toggle');
+  if (!toggle) return;
+  toggle.dataset.mode = theme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = document.getElementById('fdl-toggle-icon');
+  if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = theme === 'light' ? '☀' : '☽';
+}
+function renderFdl() {
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getFdlTheme(globalTheme);
+  const image = document.getElementById('fdl-image');
+  if (image && !fdlState.animating) image.setAttribute('src', getFdlImagePath(fdlState.index, activeTheme));
+  const dots = Array.from(document.querySelectorAll('#fdl-dots .lrs-dot'));
+  dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === fdlState.index));
+  updateFdlThemeToggle(activeTheme);
+}
+function slideFdl(direction) {
+  if (fdlState.animating) return;
+  const stage = document.querySelector('#fdl-carousel .lrs-stage');
+  const current = document.getElementById('fdl-image');
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getFdlTheme(globalTheme);
+  if (!stage || !current) return;
+  const targetIndex = direction === 'next'
+    ? (fdlState.index + 1) % fdlState.total
+    : (fdlState.index - 1 + fdlState.total) % fdlState.total;
+  preloadFdlTheme(activeTheme);
+  const incoming = current.cloneNode(true);
+  incoming.removeAttribute('id');
+  incoming.classList.add('lrs-image-incoming');
+  incoming.setAttribute('src', getFdlImagePath(targetIndex, activeTheme));
+  incoming.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+  stage.appendChild(incoming);
+  fdlState.animating = true;
+  requestAnimationFrame(() => {
+    current.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+    incoming.style.transform = 'translateX(0)';
+  });
+  incoming.addEventListener('transitionend', () => {
+    fdlState.index = targetIndex;
+    current.setAttribute('src', getFdlImagePath(fdlState.index, activeTheme));
+    current.style.transition = 'none';
+    current.style.transform = 'translateX(0)';
+    void current.offsetWidth;
+    current.style.transition = '';
+    incoming.remove();
+    fdlState.animating = false;
+    renderFdl();
+  }, { once: true });
+}
+function syncFdlToGlobalTheme(globalTheme) {
+  if (!fdlState.localTheme) {
+    updateFdlThemeToggle(globalTheme);
+    renderFdl();
+  }
+}
+function updateFdcThemeToggle(theme) {
+  const toggle = document.getElementById('fdc-theme-toggle');
+  if (!toggle) return;
+  toggle.dataset.mode = theme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = document.getElementById('fdc-toggle-icon');
+  if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = theme === 'light' ? '☀' : '☽';
+}
+function renderFdc() {
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getFdcTheme(globalTheme);
+  const image = document.getElementById('fdc-image');
+  if (image) image.setAttribute('src', getFdcImagePath(activeTheme));
+  updateFdcThemeToggle(activeTheme);
+}
+function syncFdcToGlobalTheme(globalTheme) {
+  if (!fdcState.localTheme) {
+    updateFdcThemeToggle(globalTheme);
+    renderFdc();
+  }
+}
+function updateRgoThemeToggle(theme) {
+  const toggle = document.getElementById('rgo-theme-toggle');
+  if (!toggle) return;
+  toggle.dataset.mode = theme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = document.getElementById('rgo-toggle-icon');
+  if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = theme === 'light' ? '☀' : '☽';
+}
+function renderRgo() {
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getRgoTheme(globalTheme);
+  const image = document.getElementById('rgo-image');
+  if (image && !rgoState.animating) image.setAttribute('src', getRgoImagePath(rgoState.index, activeTheme));
+  const dots = Array.from(document.querySelectorAll('#rgo-dots .lrs-dot'));
+  dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === rgoState.index));
+  updateRgoThemeToggle(activeTheme);
+}
+function slideRgo(direction) {
+  if (rgoState.animating) return;
+  const stage = document.querySelector('#rgo-carousel .lrs-stage');
+  const current = document.getElementById('rgo-image');
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getRgoTheme(globalTheme);
+  if (!stage || !current) return;
+  const targetIndex = direction === 'next'
+    ? (rgoState.index + 1) % rgoState.total
+    : (rgoState.index - 1 + rgoState.total) % rgoState.total;
+  preloadRgoTheme(activeTheme);
+  const incoming = current.cloneNode(true);
+  incoming.removeAttribute('id');
+  incoming.classList.add('lrs-image-incoming');
+  incoming.setAttribute('src', getRgoImagePath(targetIndex, activeTheme));
+  incoming.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+  stage.appendChild(incoming);
+  rgoState.animating = true;
+  requestAnimationFrame(() => {
+    current.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+    incoming.style.transform = 'translateX(0)';
+  });
+  incoming.addEventListener('transitionend', () => {
+    rgoState.index = targetIndex;
+    current.setAttribute('src', getRgoImagePath(rgoState.index, activeTheme));
+    current.style.transition = 'none';
+    current.style.transform = 'translateX(0)';
+    void current.offsetWidth;
+    current.style.transition = '';
+    incoming.remove();
+    rgoState.animating = false;
+    renderRgo();
+  }, { once: true });
+}
+function syncRgoToGlobalTheme(globalTheme) {
+  if (!rgoState.localTheme) {
+    updateRgoThemeToggle(globalTheme);
+    renderRgo();
+  }
+}
+function updateSplitThemeToggle(theme) {
+  const toggle = document.getElementById('split-theme-toggle');
+  if (!toggle) return;
+  toggle.dataset.mode = theme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = document.getElementById('split-toggle-icon');
+  if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = theme === 'light' ? '☀' : '☽';
+}
+function renderSplit() {
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getSplitTheme(globalTheme);
+  const image = document.getElementById('split-image');
+  if (image && !splitState.animating) image.setAttribute('src', getSplitImagePath(splitState.index, activeTheme));
+  const dots = Array.from(document.querySelectorAll('#split-dots .lrs-dot'));
+  dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === splitState.index));
+  updateSplitThemeToggle(activeTheme);
+}
+function slideSplit(direction) {
+  if (splitState.animating) return;
+  const stage = document.querySelector('#split-carousel .lrs-stage');
+  const current = document.getElementById('split-image');
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getSplitTheme(globalTheme);
+  if (!stage || !current) return;
+  const targetIndex = direction === 'next'
+    ? (splitState.index + 1) % splitState.total
+    : (splitState.index - 1 + splitState.total) % splitState.total;
+  preloadSplitTheme(activeTheme);
+  const incoming = current.cloneNode(true);
+  incoming.removeAttribute('id');
+  incoming.classList.add('lrs-image-incoming');
+  incoming.setAttribute('src', getSplitImagePath(targetIndex, activeTheme));
+  incoming.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+  stage.appendChild(incoming);
+  splitState.animating = true;
+  requestAnimationFrame(() => {
+    current.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+    incoming.style.transform = 'translateX(0)';
+  });
+  incoming.addEventListener('transitionend', () => {
+    splitState.index = targetIndex;
+    current.setAttribute('src', getSplitImagePath(splitState.index, activeTheme));
+    current.style.transition = 'none';
+    current.style.transform = 'translateX(0)';
+    void current.offsetWidth;
+    current.style.transition = '';
+    incoming.remove();
+    splitState.animating = false;
+    renderSplit();
+  }, { once: true });
+}
+function syncSplitToGlobalTheme(globalTheme) {
+  if (!splitState.localTheme) {
+    updateSplitThemeToggle(globalTheme);
+    renderSplit();
+  }
+}
+function updateTxnThemeToggle(theme) {
+  const toggle = document.getElementById('txn-theme-toggle');
+  if (!toggle) return;
+  toggle.dataset.mode = theme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = document.getElementById('txn-toggle-icon');
+  if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = theme === 'light' ? '☀' : '☽';
+}
+function renderTxn() {
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getTxnTheme(globalTheme);
+  const image = document.getElementById('txn-image');
+  if (image && !txnState.animating) image.setAttribute('src', getTxnImagePath(txnState.index, activeTheme));
+  const dots = Array.from(document.querySelectorAll('#txn-dots .lrs-dot'));
+  dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === txnState.index));
+  updateTxnThemeToggle(activeTheme);
+}
+function slideTxn(direction) {
+  if (txnState.animating) return;
+  const stage = document.querySelector('#txn-carousel .lrs-stage');
+  const current = document.getElementById('txn-image');
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getTxnTheme(globalTheme);
+  if (!stage || !current) return;
+  const targetIndex = direction === 'next'
+    ? (txnState.index + 1) % txnState.total
+    : (txnState.index - 1 + txnState.total) % txnState.total;
+  preloadTxnTheme(activeTheme);
+  const incoming = current.cloneNode(true);
+  incoming.removeAttribute('id');
+  incoming.classList.add('lrs-image-incoming');
+  incoming.setAttribute('src', getTxnImagePath(targetIndex, activeTheme));
+  incoming.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+  stage.appendChild(incoming);
+  txnState.animating = true;
+  requestAnimationFrame(() => {
+    current.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+    incoming.style.transform = 'translateX(0)';
+  });
+  incoming.addEventListener('transitionend', () => {
+    txnState.index = targetIndex;
+    current.setAttribute('src', getTxnImagePath(txnState.index, activeTheme));
+    current.style.transition = 'none';
+    current.style.transform = 'translateX(0)';
+    void current.offsetWidth;
+    current.style.transition = '';
+    incoming.remove();
+    txnState.animating = false;
+    renderTxn();
+  }, { once: true });
+}
+function syncTxnToGlobalTheme(globalTheme) {
+  if (!txnState.localTheme) {
+    updateTxnThemeToggle(globalTheme);
+    renderTxn();
+  }
+}
+function initLrsCarousel() {
+  const prev = document.getElementById('lrs-prev');
+  const next = document.getElementById('lrs-next');
+  const toggle = document.getElementById('lrs-theme-toggle');
+  if (!prev || !next || !toggle) return;
+  prev.addEventListener('click', () => {
+    slideLrs('prev');
+  });
+  next.addEventListener('click', () => {
+    slideLrs('next');
+  });
+  toggle.addEventListener('click', () => {
+    const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const activeTheme = getLrsTheme(globalTheme);
+    lrsState.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    renderLrs();
+  });
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  preloadLrsTheme('dark');
+  preloadLrsTheme('light');
+  updateLrsThemeToggle(globalTheme);
+  renderLrs();
+}
+function initFdlCarousel() {
+  const prev = document.getElementById('fdl-prev');
+  const next = document.getElementById('fdl-next');
+  const toggle = document.getElementById('fdl-theme-toggle');
+  if (!prev || !next || !toggle) return;
+  prev.addEventListener('click', () => {
+    slideFdl('prev');
+  });
+  next.addEventListener('click', () => {
+    slideFdl('next');
+  });
+  toggle.addEventListener('click', () => {
+    const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const activeTheme = getFdlTheme(globalTheme);
+    fdlState.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    renderFdl();
+  });
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  preloadFdlTheme('dark');
+  preloadFdlTheme('light');
+  updateFdlThemeToggle(globalTheme);
+  renderFdl();
+}
+function initFdcSection() {
+  const toggle = document.getElementById('fdc-theme-toggle');
+  if (!toggle) return;
+  toggle.addEventListener('click', () => {
+    const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const activeTheme = getFdcTheme(globalTheme);
+    fdcState.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    renderFdc();
+  });
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  preloadFdcTheme('dark');
+  preloadFdcTheme('light');
+  updateFdcThemeToggle(globalTheme);
+  renderFdc();
+}
+function initRgoCarousel() {
+  const prev = document.getElementById('rgo-prev');
+  const next = document.getElementById('rgo-next');
+  const toggle = document.getElementById('rgo-theme-toggle');
+  if (!prev || !next || !toggle) return;
+  prev.addEventListener('click', () => {
+    slideRgo('prev');
+  });
+  next.addEventListener('click', () => {
+    slideRgo('next');
+  });
+  toggle.addEventListener('click', () => {
+    const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const activeTheme = getRgoTheme(globalTheme);
+    rgoState.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    renderRgo();
+  });
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  preloadRgoTheme('dark');
+  preloadRgoTheme('light');
+  updateRgoThemeToggle(globalTheme);
+  renderRgo();
+}
+function initSplitCarousel() {
+  const prev = document.getElementById('split-prev');
+  const next = document.getElementById('split-next');
+  const toggle = document.getElementById('split-theme-toggle');
+  if (!prev || !next || !toggle) return;
+  prev.addEventListener('click', () => {
+    slideSplit('prev');
+  });
+  next.addEventListener('click', () => {
+    slideSplit('next');
+  });
+  toggle.addEventListener('click', () => {
+    const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const activeTheme = getSplitTheme(globalTheme);
+    splitState.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    renderSplit();
+  });
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  preloadSplitTheme('dark');
+  preloadSplitTheme('light');
+  updateSplitThemeToggle(globalTheme);
+  renderSplit();
+}
+function initTxnCarousel() {
+  const prev = document.getElementById('txn-prev');
+  const next = document.getElementById('txn-next');
+  const toggle = document.getElementById('txn-theme-toggle');
+  if (!prev || !next || !toggle) return;
+  prev.addEventListener('click', () => {
+    slideTxn('prev');
+  });
+  next.addEventListener('click', () => {
+    slideTxn('next');
+  });
+  toggle.addEventListener('click', () => {
+    const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const activeTheme = getTxnTheme(globalTheme);
+    txnState.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    renderTxn();
+  });
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  preloadTxnTheme('dark');
+  preloadTxnTheme('light');
+  updateTxnThemeToggle(globalTheme);
+  renderTxn();
+}
+function updateSideNavActiveLink() {
+  const links = Array.from(document.querySelectorAll('.case-side-link[href^="#"]'));
+  if (!links.length) return;
+  const sections = links.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  const marker = window.scrollY + 120;
+  let activeId = null;
+  sections.forEach((section) => { if (section.offsetTop <= marker) activeId = section.id; });
+  if (!activeId && sections[0]) activeId = sections[0].id;
+  links.forEach((link) => link.classList.toggle('is-active', link.getAttribute('href') === `#${activeId}`));
+}
+window.addEventListener('scroll', updateSideNavActiveLink, { passive: true });
+window.addEventListener('resize', updateSideNavActiveLink);
+(function () {
+  try {
+    const saved = localStorage.getItem('gb-theme');
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+      const label = document.getElementById('theme-label');
+      const icon = document.getElementById('toggle-icon');
+      if (label) label.textContent = saved === 'light' ? 'Light' : 'Dark';
+      if (icon) icon.textContent = saved === 'light' ? '☀' : '☽';
+    }
+  } catch (e) {}
+  initLrsCarousel();
+  initFdlCarousel();
+  initFdcSection();
+  initRgoCarousel();
+  initSplitCarousel();
+  initTxnCarousel();
+  updateSideNavActiveLink();
+})();
+</script>
+</body>
+</html>

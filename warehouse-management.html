@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warehouse Management Case Study - Gaurav Borra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[data-theme="dark"] {
+  --bg: #0e0e0c;
+  --bg2: #161614;
+  --bg3: #1c1c19;
+  --card: #141412;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #f0ede6;
+  --text-muted: #60605a;
+  --text-mid: #a0a09a;
+  --accent: #c8f76b;
+  --accent-soft-bg: rgba(200, 247, 107, 0.09);
+  --accent-soft-border: rgba(200, 247, 107, 0.2);
+  --accent-soft-text: #d5eca7;
+  --nav-bg: rgba(14,14,12,0.96);
+  --toggle-bg: #222220;
+  --toggle-border: rgba(255,255,255,0.1);
+  --toggle-knob: #f0ede6;
+}
+[data-theme="light"] {
+  --bg: #faf9f6;
+  --bg2: #f0ede6;
+  --bg3: #e8e5de;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.07);
+  --border-hover: rgba(0,0,0,0.14);
+  --text: #141410;
+  --text-muted: #909088;
+  --text-mid: #4c4c48;
+  --accent: #4a8a10;
+  --accent-soft-bg: rgba(74, 138, 16, 0.08);
+  --accent-soft-border: rgba(74, 138, 16, 0.2);
+  --accent-soft-text: #446f1c;
+  --nav-bg: rgba(244,242,237,0.96);
+  --toggle-bg: #e0ddd6;
+  --toggle-border: rgba(0,0,0,0.1);
+  --toggle-knob: #141410;
+}
+:root {
+  --serif: 'Fraunces', Georgia, serif;
+  --mono: 'Geist', monospace;
+  --sans: 'Geist', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+.case-back {
+  position: fixed; top: 10px; left: 10px; z-index: 140;
+  display: inline-flex; align-items: center; gap: 0.38rem;
+  padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--nav-bg); color: var(--text-mid);
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.case-back:hover { color: var(--text); border-color: var(--border-hover); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.25rem; }
+.nav { position: sticky; top: 0; z-index: 100; background: var(--nav-bg); backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); }
+.nav .wrap { height: 64px; display: flex; justify-content: space-between; align-items: center; }
+.nav-logo { font-family: var(--serif); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.nav-links { display: flex; gap: 1px; }
+.nav-link {
+  display: flex; align-items: center; gap: 5px; padding: 5px 11px; font-size: 11.5px; font-weight: 500;
+  color: var(--text-muted); letter-spacing: 0.04em; border: 1px solid transparent; border-radius: 6px;
+}
+.nav-link:hover { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.nav-num { font-family: var(--mono); font-size: 9px; color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 1.25rem; }
+.theme-toggle { display: flex; align-items: center; gap: 7px; cursor: pointer; user-select: none; }
+.toggle-track { width: 38px; height: 21px; background: var(--toggle-bg); border: 1px solid var(--toggle-border); border-radius: 100px; position: relative; }
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--toggle-knob); transition: transform 0.25s; display: flex; align-items: center; justify-content: center; font-size: 8px;
+}
+[data-theme="light"] .theme-toggle .toggle-knob { transform: translateX(17px); }
+.toggle-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; width: 26px; }
+.case-page { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%); }
+.case-wrap { max-width: 1080px; margin: 0 auto; padding: 4.2rem 1.25rem; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 3rem; }
+.case-side { position: sticky; top: 88px; align-self: start; border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem 0.95rem; }
+.case-side-eyebrow { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 9.5px; color: var(--accent); margin-bottom: 0.45rem; }
+.case-side-title { font-family: var(--serif); font-size: 1.05rem; line-height: 1.25; margin-bottom: 1rem; }
+.case-side-nav { display: flex; flex-direction: column; gap: 0.38rem; }
+.case-side-link { font-size: 12px; color: var(--text-mid); border: 1px solid transparent; border-radius: 6px; padding: 0.45rem 0.55rem; }
+.case-side-link:hover { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.case-side-link.is-active { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.case-header { padding-bottom: 2.2rem; border-bottom: 1px solid var(--border); }
+.case-kicker { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 10px; color: var(--accent); margin-bottom: 0.7rem; }
+.case-title { font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.35rem); line-height: 1.05; margin-bottom: 1rem; }
+.case-title em { font-style: normal; opacity: 0.6; }
+.case-subtitle { font-size: 14px; line-height: 1.9; color: var(--text-mid); max-width: 75ch; }
+.case-section { padding: 2.3rem 0; border-bottom: 1px solid var(--border); scroll-margin-top: 72px; }
+.case-h2 { font-size: 12px; line-height: 1.4; font-weight: 500; letter-spacing: 0.03em; color: var(--text-mid); margin-bottom: 0.65rem; text-transform: uppercase; }
+.case-h3 { font-family: var(--serif); font-size: clamp(1.45rem, 3.2vw, 2.15rem); line-height: 1.2; margin: 0 0 1rem; }
+.case-p { font-size: 14px; line-height: 1.85; color: var(--text-mid); margin-bottom: 0.85rem; }
+.problem-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.case-card { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.case-card-title { font-size: 14px; margin-bottom: 0.35rem; font-weight: 500; color: var(--text); }
+.case-card-text { font-size: 13px; line-height: 1.7; color: var(--text-mid); }
+.insight-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+.insight { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 0.9rem; border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.insight-num { font-family: var(--serif); font-size: 13px; color: var(--text-muted); }
+.insight-title { font-size: 14px; font-weight: 600; margin-bottom: 0.35rem; }
+.insight-decision {
+  margin-top: 0.55rem; display: inline-block; font-size: 12px; line-height: 1.55; color: var(--accent-soft-text);
+  background: var(--accent-soft-bg); border: 1px solid var(--accent-soft-border); border-radius: 7px; padding: 0.38rem 0.56rem;
+}
+.pillars { display: flex; flex-direction: column; gap: 1.6rem; }
+.pillar { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.pillar-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.pillar-num { font-family: var(--serif); font-size: 13px; color: var(--text-muted); }
+.pillar-title { font-size: 14px; font-weight: 600; }
+.pillar-tag { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--border); border-radius: 999px; padding: 0.14rem 0.46rem; }
+.screen-row { display: grid; gap: 1rem; margin-top: 0.8rem; }
+.screen-row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.screen-row-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lrs-carousel {
+  margin-top: 0.9rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+.lrs-stage-shell { position: relative; }
+.lrs-stage {
+  position: relative;
+  border: 0;
+  border-radius: 10px;
+  background: var(--bg2);
+  overflow: hidden;
+}
+.lrs-image {
+  width: 95%;
+  margin: 0 auto;
+  display: block;
+  transition: transform 0.34s ease;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+.lrs-image-incoming {
+  position: absolute;
+  top: 0;
+  left: 2.5%;
+  width: 95%;
+  z-index: 2;
+  pointer-events: none;
+}
+.lrs-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.28);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 5;
+}
+.lrs-nav-btn:hover { background: rgba(0,0,0,0.42); }
+.lrs-nav-prev { left: -0.7rem; }
+.lrs-nav-next { right: -0.7rem; }
+.lrs-dots { margin-top: 0.7rem; display: flex; justify-content: center; gap: 0.4rem; }
+.lrs-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-hover); }
+.lrs-dot.is-active { background: var(--accent); }
+.solution-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+}
+.section-theme-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  user-select: none;
+}
+.section-theme-toggle .toggle-track {
+  width: 38px;
+  height: 21px;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 100px;
+  position: relative;
+  flex-shrink: 0;
+}
+.section-theme-toggle .toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--toggle-knob);
+  transition: transform 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+.section-theme-toggle[data-mode="light"] .toggle-knob { transform: translateX(17px); }
+.section-toggle-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: 34px;
+}
+.solution-control-btn {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.44rem 0.62rem;
+  background: var(--card);
+  color: var(--text-mid);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+}
+.solution-control-btn:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+  background: var(--bg2);
+}
+.expand-icon {
+  width: 13px;
+  height: 13px;
+  display: inline-block;
+  color: currentColor;
+}
+.shift-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+#lt-gallery {
+  column-gap: 1rem;
+  row-gap: 2rem;
+}
+#saf-gallery {
+  column-gap: 1rem;
+  row-gap: 2rem;
+}
+.shift-shot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.shift-shot-media {
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg2);
+}
+.shift-shot-media img {
+  width: 100%;
+  display: block;
+}
+.shift-shot-copy {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 0.8rem 0.85rem 0.9rem;
+  text-align: center;
+}
+.shift-shot-title {
+  font-size: 12.5px;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.28rem;
+}
+.shift-shot-desc {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-mid);
+}
+.screen-modal[hidden] { display: none; }
+.screen-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+}
+.screen-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+.screen-modal-dialog {
+  position: relative;
+  width: min(1700px, 94vw);
+  max-height: 94vh;
+  margin: 3vh auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.screen-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--nav-bg);
+}
+.screen-modal-title {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+.screen-modal-body {
+  flex: 1;
+  overflow: auto;
+  padding: 0.75rem;
+}
+.case-placeholder {
+  border: 1px dashed var(--border-hover); border-radius: 10px; background: var(--bg3); min-height: 130px;
+  display: flex; align-items: center; justify-content: center; text-align: center; color: var(--text-mid); padding: 1rem;
+}
+.placeholder-text { display: flex; flex-direction: column; gap: 0.35rem; }
+.placeholder-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); }
+.placeholder-desc { font-size: 12px; line-height: 1.6; color: var(--text-mid); }
+.screen-caption { margin-top: 0.45rem; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: center; }
+.tradeoff { margin-top: 0.9rem; border-left: 2px solid var(--border-hover); background: var(--bg3); border-radius: 0 8px 8px 0; padding: 0.7rem 0.85rem; font-size: 13px; line-height: 1.75; color: var(--text-mid); }
+.case-metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.case-metric { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; }
+.case-metric-value { font-family: var(--sans); font-size: 1.6rem; margin-bottom: 0.4rem; }
+.case-metric-label { font-size: 12.5px; line-height: 1.65; color: var(--text-mid); }
+.meta-row { display: flex; gap: 2.2rem; flex-wrap: wrap; margin-top: 1.35rem; }
+.meta-key { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.25rem; }
+.meta-val { font-size: 13px; color: var(--text-mid); }
+.unexpected { margin-top: 1rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg3); padding: 1rem; }
+.unexpected-tag { font-size: 13px; color: var(--text); margin-bottom: 0.55rem; font-weight: 500; }
+.reflection-item { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.reflection-item:last-child { border-bottom: 0; }
+.other-projects { margin-top: 3.4rem; padding-top: 2.2rem; border-top: 1px solid var(--border); }
+.other-project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 0.95rem; }
+.other-project-card { border: 1px solid var(--border); border-radius: 10px; background: var(--card); padding: 1rem; transition: all 0.18s ease; }
+.other-project-card:hover { border-color: var(--border-hover); background: var(--bg2); }
+.other-project-title { font-size: 14px; font-weight: 600; margin-bottom: 0.45rem; }
+.other-project-desc { font-size: 13px; line-height: 1.7; color: var(--text-mid); margin-bottom: 0.8rem; }
+.other-project-cta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; color: var(--accent); }
+.footer .wrap { padding-top: 1.6rem; padding-bottom: 1.6rem; display: flex; justify-content: space-between; align-items: center; }
+.footer-l, .footer-link { font-family: var(--mono); font-size: 10.5px; color: var(--text-muted); letter-spacing: 0.03em; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-link:hover { color: var(--accent); }
+@media (max-width: 930px) {
+  .case-wrap { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 3.1rem; padding-bottom: 3.1rem; }
+  .case-side { position: static; }
+  .case-side-nav { flex-direction: row; flex-wrap: wrap; }
+}
+@media (max-width: 700px) {
+  .problem-grid, .case-metric-grid, .screen-row-2, .screen-row-3, .other-project-grid, .shift-gallery { grid-template-columns: 1fr; }
+  .screen-modal-dialog {
+    width: min(96vw, 96vw);
+    max-height: 82vh;
+    margin: 8vh auto;
+  }
+}
+</style>
+</head>
+<body id="top">
+<a href="portfolio.html" class="case-back" aria-label="Back to home">← Back</a>
+<nav class="nav">
+  <div class="wrap">
+    <a href="portfolio.html" class="nav-logo" aria-label="Go to home">GB</a>
+    <div class="nav-links">
+      <a href="portfolio.html#work" class="nav-link"><span class="nav-num">01</span> Work</a>
+      <a href="portfolio.html#experience" class="nav-link"><span class="nav-num">02</span> Experience</a>
+      <a href="portfolio.html#about" class="nav-link"><span class="nav-num">03</span> About</a>
+    </div>
+    <div class="nav-right">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="toggle-label" id="theme-label">Dark</span>
+        <div class="toggle-track"><div class="toggle-knob"><span id="toggle-icon">☽</span></div></div>
+      </div>
+    </div>
+  </div>
+</nav>
+<main class="case-page">
+  <div class="case-wrap">
+    <aside class="case-side">
+      <p class="case-side-eyebrow">Case Study</p>
+      <p class="case-side-title">Warehouse Management System</p>
+      <nav class="case-side-nav">
+        <a class="case-side-link" href="#top">Context</a>
+        <a class="case-side-link" href="#wm-problem">Problem</a>
+        <a class="case-side-link" href="#wm-learnings">What I Learned</a>
+        <a class="case-side-link" href="#wm-design">The Design</a>
+        <a class="case-side-link" href="#wm-outcome">Outcome</a>
+        <a class="case-side-link" href="#wm-looking-back">Looking Back</a>
+      </nav>
+    </aside>
+    <div class="case-main">
+      <header class="case-header" id="wm-context">
+        <p class="case-kicker">Warehouse Management System — Solvei8</p>
+        <h1 class="case-title">Nobody knew where the fabric was — <em>until production needed it</em></h1>
+        <p class="case-subtitle">Warehouse staff were logging fabric locations on paper and coordinating transfers over WhatsApp. Factory admins had no real-time view of capacity. I designed a connected mobile-desktop system that replaced manual coordination with digital traceability — now being deployed across Young One, one of Asia's largest apparel manufacturers with operations across 10+ countries.</p>
+        <div class="case-metric-grid">
+          <div class="case-metric"><p class="case-metric-value">30–35</p><p class="case-metric-label">Factories in planned rollout</p></div>
+          <div class="case-metric"><p class="case-metric-value">Young One</p><p class="case-metric-label">First enterprise client — Korea-based, one of Asia's largest apparel manufacturers</p></div>
+          <div class="case-metric"><p class="case-metric-value">0</p><p class="case-metric-label">Paper location logs remaining in onboarded factories</p></div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-item">
+            <p class="meta-key">Role</p>
+            <p class="meta-val">Sole designer — end to end</p>
+          </div>
+          <div class="meta-item">
+            <p class="meta-key">Platform</p>
+            <p class="meta-val">Mobile (Android) + Desktop</p>
+          </div>
+          <div class="meta-item">
+            <p class="meta-key">Type</p>
+            <p class="meta-val">B2B SaaS — standalone vertical</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="case-section" id="wm-problem">
+        <h2 class="case-h2">The Problem</h2>
+        <p class="case-h3">The warehouse ran on paper logs and WhatsApp messages</p>
+        <p class="case-p">In apparel manufacturing, fabric and trims are inspected, stored, and moved constantly before they reach production. The accuracy of that movement is critical — a misplaced roll during a deadline order can stall an entire line.</p>
+        <p class="case-p">Before this system, there was no structured way to manage any of it. Locations were written on paper registers that went missing or became illegible. Transfers were coordinated through email and WhatsApp with no way to verify they actually happened. Factory admins had no real-time view of what was stored where — they either had to call someone or physically walk the floor.</p>
+        <div class="problem-grid">
+          <div class="case-card"><p class="case-card-title">Paper location records</p><p class="case-card-text">Storage assignments logged by hand. Incomplete, illegible, and inaccessible to anyone not holding the register.</p></div>
+          <div class="case-card"><p class="case-card-title">No transfer verification</p><p class="case-card-text">Materials moved through email and WhatsApp coordination. No confirmation a transfer happened, or when.</p></div>
+          <div class="case-card"><p class="case-card-title">No live capacity view</p><p class="case-card-text">Factory admins couldn't see which locations were full or available without physically checking. Inbound planning was guesswork.</p></div>
+          <div class="case-card"><p class="case-card-title">Disconnected from production</p><p class="case-card-text">When a production team needed specific fabric, there was no system to tell them where it was. Searching was the only option.</p></div>
+        </div>
+        <div class="tradeoff">The warehouse operated on manual communication and guesswork — inefficient in any environment, critical in a time-pressured factory.</div>
+      </section>
+
+      <section class="case-section" id="wm-learnings">
+        <h2 class="case-h2">What I Learned</h2>
+        <p class="case-h3">Four things that shaped the architecture</p>
+        <p class="case-p">Insights came through workflow mapping of the paper-based process, operational feedback from warehouse staff and factory admins, and direct client requirements on why existing WMS solutions weren't working. A clear split emerged early between what mobile needed to do and what desktop needed to do — and that split drove every structural decision.</p>
+        <div class="insight-list">
+          <article class="insight">
+            <p class="insight-num">01</p>
+            <div>
+              <p class="insight-title">Storage has to happen on the floor, not at a desk</p>
+              <p class="case-p">After inspection, warehouse staff are standing with physical rolls in hand. Any workflow that required returning to a desktop to log a location would be skipped — or done hours later from memory. The assignment had to happen in the moment, on mobile, while the material was still in hand.</p>
+              <p class="insight-decision">Mobile-first execution for all storage and transfer operations. Desktop reserved for configuration and monitoring.</p>
+            </div>
+          </article>
+          <article class="insight">
+            <p class="insight-num">02</p>
+            <div>
+              <p class="insight-title">Scanning beats typing, every time</p>
+              <p class="case-p">Warehouse floors are active environments. Typing location codes manually under time pressure introduces errors that corrupt the entire location record downstream. But a broken scanner can't mean a broken workflow.</p>
+              <p class="insight-decision">Scanning as the primary method for all location interactions, with manual search as a reliable fallback — so the workflow never breaks due to equipment issues.</p>
+            </div>
+          </article>
+          <article class="insight">
+            <p class="insight-num">03</p>
+            <div>
+              <p class="insight-title">Capacity had to be calculated, not entered</p>
+              <p class="case-p">If factory admins manually entered capacity estimates, the data was always one step behind reality. The only number worth trusting was one derived automatically from actual storage assignments.</p>
+              <p class="insight-decision">Capacity across every Bay → Shelf → Bin location updates in real time from mobile assignments — never from manual input.</p>
+            </div>
+          </article>
+          <article class="insight">
+            <p class="insight-num">04</p>
+            <div>
+              <p class="insight-title">Transfers needed verification at both ends</p>
+              <p class="case-p">A transfer logged at the source but not confirmed at the destination was just as unreliable as a paper log. The physical movement and the digital record had to happen together.</p>
+              <p class="insight-decision">Both source and destination locations scanned or selected to complete every transfer — creating a complete, error-resistant audit trail.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-section" id="wm-design">
+        <h2 class="case-h2">The Design</h2>
+        <p class="case-h3">Three flows, one architecture: mobile execution, desktop oversight</p>
+        <p class="case-p">Warehouse staff execute storage and transfers on mobile while physically handling materials. Factory admins configure structure and monitor capacity from desktop. All data syncs in real time. The two surfaces were designed for completely different contexts — but built to stay in sync.</p>
+        <div class="pillars">
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">01</p><p class="pillar-title">Storage Assignment</p><p class="pillar-tag">Mobile</p></div>
+            <p class="case-p">Once fabric or trims pass inspection and a GRN is generated, warehouse staff assign materials to storage locations immediately — while still on the floor with the physical rolls. The flow is: select the GRN, choose rolls, scan the destination location, confirm.</p>
+            <p class="case-p">The location's available capacity is shown before roll selection so staff can see at a glance whether a location can take what they're storing. A live counter tracks selected vs. available capacity as rolls are chosen. Once confirmed, warehouse capacity updates instantly across the system.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="saf-gallery" data-mode="dark" aria-label="Toggle storage assignment screens theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                </span>
+              </button>
+              <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="saf-gallery">
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                </svg>
+                Expand screens
+              </button>
+            </div>
+            <div class="shift-gallery" id="saf-gallery" data-section-gallery>
+              <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_1.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_1.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_1.White.png" alt="Storage assignment screen 1"></div></article>
+              <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_2.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_2.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_2.White.png" alt="Storage assignment screen 2"></div></article>
+              <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_3.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_3.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_3.White.png" alt="Storage assignment screen 3"></div></article>
+              <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_4.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_4.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_4.White.png" alt="Storage assignment screen 4"></div></article>
+              <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_5.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_5.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_5.White.png" alt="Storage assignment screen 5"></div></article>
+              <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_6.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_6.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/Storage_Assignment%20confirmed.png" alt="Storage assignment screen 6"></div></article>
+            </div>
+            <div class="tradeoff">Scanning was made the primary method, but a broken scanner can't mean a broken workflow. Manual search by location ID was built as a reliable fallback — so assignments could always be completed regardless of equipment conditions on the floor.</div>
+          </article>
+
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">02</p><p class="pillar-title">Warehouse Management</p><p class="pillar-tag">Desktop</p></div>
+            <p class="case-p">Factory admins configure the warehouse structure — Bay → Shelf → Bin hierarchy — either by uploading a bulk Excel file or managing locations individually. The desktop dashboard shows live capacity utilization for every location, automatically calculated from mobile storage assignments. No manual input, no estimates — the number always reflects ground reality.</p>
+            <p class="case-p">Admins also generate printable QR code tags for each location directly from the dashboard. These tags are the physical-digital bridge — the codes warehouse staff scan during every storage and transfer operation to keep the system in sync with what's actually on the floor.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" id="wmd-theme-toggle" type="button" data-mode="dark" aria-label="Toggle warehouse management screens theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span id="wmd-toggle-icon">☽</span></span>
+                </span>
+              </button>
+            </div>
+            <div class="lrs-carousel" id="wmd-carousel">
+              <div class="lrs-stage-shell">
+                <button class="lrs-nav-btn lrs-nav-prev" type="button" id="wmd-prev" aria-label="Previous screen">‹</button>
+                <div class="lrs-stage">
+                  <img class="lrs-image" id="wmd-image" src="assets/MM_Screens/WMD/WMD_1.Dark.png" alt="Warehouse management screen">
+                </div>
+                <button class="lrs-nav-btn lrs-nav-next" type="button" id="wmd-next" aria-label="Next screen">›</button>
+              </div>
+              <div class="lrs-dots" id="wmd-dots">
+                <span class="lrs-dot is-active"></span>
+                <span class="lrs-dot"></span>
+                <span class="lrs-dot"></span>
+              </div>
+            </div>
+            <div class="tradeoff">Making capacity a calculated value rather than an input field meant the number was always accurate — but it also meant any fabric stored before go-live had to be migrated in during onboarding. That migration was handled as an onboarding step, not built into the product, which added friction to the initial setup process.</div>
+          </article>
+
+          <article class="pillar">
+            <div class="pillar-head"><p class="pillar-num">03</p><p class="pillar-title">Location Transfer</p><p class="pillar-tag">Mobile</p></div>
+            <p class="case-p">When fabric or trims need to move between storage locations, warehouse staff execute the transfer on mobile while physically moving the material. They scan or select the source location, choose items to transfer, scan the destination, and confirm. Both locations update their capacity automatically.</p>
+            <p class="case-p">The confirmation screen shows source and destination locations, capacity percentages for both, and the selected items — one final check before committing. Items can still be deselected at this stage.</p>
+            <div class="solution-controls">
+              <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="lt-gallery" data-mode="dark" aria-label="Toggle location transfer screens theme">
+                <span class="section-toggle-label">Dark</span>
+                <span class="toggle-track">
+                  <span class="toggle-knob"><span class="section-toggle-icon">☽</span></span>
+                </span>
+              </button>
+              <button class="solution-control-btn" type="button" data-action="expand-gallery" data-target-gallery="lt-gallery">
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3.75 19.5L3.75 15C3.75 14.8011 3.82902 14.6103 3.96967 14.4697C4.11032 14.329 4.30109 14.25 4.5 14.25C4.69891 14.25 4.88968 14.329 5.03033 14.4697C5.17098 14.6103 5.25 14.8011 5.25 15L5.25 17.6897L9.21938 13.7194C9.36011 13.5786 9.55098 13.4996 9.75 13.4996C9.94902 13.4996 10.1399 13.5786 10.2806 13.7194C10.4214 13.8601 10.5004 14.051 10.5004 14.25C10.5004 14.449 10.4214 14.6399 10.2806 14.7806L6.31031 18.75L9 18.75C9.19891 18.75 9.38968 18.829 9.53033 18.9697C9.67098 19.1103 9.75 19.3011 9.75 19.5C9.75 19.6989 9.67099 19.8897 9.53033 20.0303C9.38968 20.171 9.19891 20.25 9 20.25L4.5 20.25C4.30109 20.25 4.11032 20.171 3.96967 20.0303C3.82902 19.8897 3.75 19.6989 3.75 19.5ZM14.7806 10.2806L18.75 6.31031L18.75 9C18.75 9.19891 18.829 9.38968 18.9697 9.53033C19.1103 9.67098 19.3011 9.75 19.5 9.75C19.6989 9.75 19.8897 9.67098 20.0303 9.53033C20.171 9.38968 20.25 9.19891 20.25 9L20.25 4.5C20.25 4.30109 20.171 4.11032 20.0303 3.96967C19.8897 3.82902 19.6989 3.75 19.5 3.75L15 3.75C14.8011 3.75 14.6103 3.82902 14.4697 3.96967C14.329 4.11032 14.25 4.30109 14.25 4.5C14.25 4.69891 14.329 4.88968 14.4697 5.03033C14.6103 5.17098 14.8011 5.25 15 5.25L17.6897 5.25L13.7194 9.21938C13.5786 9.36011 13.4996 9.55098 13.4996 9.75C13.4996 9.94902 13.5786 10.1399 13.7194 10.2806C13.8601 10.4214 14.051 10.5004 14.25 10.5004C14.449 10.5004 14.6399 10.4214 14.7806 10.2806ZM4.5 9.75C4.69891 9.75 4.88968 9.67098 5.03033 9.53033C5.17098 9.38968 5.25 9.19891 5.25 9L5.25 6.31031L9.21938 10.2806C9.36011 10.4214 9.55098 10.5004 9.75 10.5004C9.94902 10.5004 10.1399 10.4214 10.2806 10.2806C10.4214 10.1399 10.5004 9.94902 10.5004 9.75C10.5004 9.55098 10.4214 9.36011 10.2806 9.21938L6.31031 5.25L9 5.25C9.19891 5.25 9.38968 5.17098 9.53033 5.03033C9.67098 4.88968 9.75 4.69891 9.75 4.5C9.75 4.30109 9.67098 4.11032 9.53033 3.96967C9.38968 3.82902 9.19891 3.75 9 3.75L4.5 3.75C4.30109 3.75 4.11032 3.82902 3.96967 3.96967C3.82902 4.11032 3.75 4.30109 3.75 4.5L3.75 9C3.75 9.19891 3.82902 9.38968 3.96967 9.53033C4.11032 9.67098 4.30109 9.75 4.5 9.75ZM17.6897 18.75L15 18.75C14.8011 18.75 14.6103 18.829 14.4697 18.9697C14.329 19.1103 14.25 19.3011 14.25 19.5C14.25 19.6989 14.329 19.8897 14.4697 20.0303C14.6103 20.171 14.8011 20.25 15 20.25L19.5 20.25C19.6989 20.25 19.8897 20.171 20.0303 20.0303C20.171 19.8897 20.25 19.6989 20.25 19.5L20.25 15C20.25 14.8011 20.171 14.6103 20.0303 14.4697C19.8897 14.329 19.6989 14.25 19.5 14.25C19.3011 14.25 19.1103 14.329 18.9697 14.4697C18.829 14.6103 18.75 14.8011 18.75 15L18.75 17.6897L14.7806 13.7194C14.6399 13.5786 14.449 13.4996 14.25 13.4996C14.051 13.4996 13.8601 13.5786 13.7194 13.7194C13.5786 13.8601 13.4996 14.051 13.4996 14.25C13.4996 14.449 13.5786 14.6399 13.7194 14.7806L17.6897 18.75Z" fill="currentColor"/>
+                </svg>
+                Expand screens
+              </button>
+            </div>
+            <div class="shift-gallery" id="lt-gallery" data-section-gallery>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/LT/LT_1.Dark.png" data-dark-src="assets/MM_Screens/LT/LT_1.Dark.png" data-light-src="assets/MM_Screens/LT/LT_1.White.png" alt="Transfer home screen">
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/LT/LT_2.Dark.png" data-dark-src="assets/MM_Screens/LT/LT_2.Dark.png" data-light-src="assets/MM_Screens/LT/LT_2.White.png" alt="Source location selection screen">
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/LT/LT_3.Dark.png?v=20260413-2" data-dark-src="assets/MM_Screens/LT/LT_3.Dark.png?v=20260413-2" data-light-src="assets/MM_Screens/LT/LT_3.White.png?v=20260413-2" alt="Item selection screen">
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/LT/LT_4.Dark.png" data-dark-src="assets/MM_Screens/LT/LT_4.Dark.png" data-light-src="assets/MM_Screens/LT/LT_4.White.png" alt="Scan destination screen">
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/LT/LT_5.Dark.png" data-dark-src="assets/MM_Screens/LT/LT_5.Dark.png" data-light-src="assets/MM_Screens/LT/LT_5.White.png" alt="Transfer confirmation screen">
+                </div>
+              </article>
+              <article class="shift-shot">
+                <div class="shift-shot-media">
+                  <img class="shift-themed-image" src="assets/MM_Screens/LT/LT_6.Dark.png" data-dark-src="assets/MM_Screens/LT/LT_6.Dark.png" data-light-src="assets/MM_Screens/LT/LT_6.White.png" alt="Transfer success screen">
+                </div>
+              </article>
+            </div>
+            <div class="tradeoff">Requiring both source and destination to be scanned or selected added one step to the transfer flow. But it was the only way to create a complete audit trail and prevent the most common transfer error — logging a move that only happened partially.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-section" id="wm-outcome">
+        <h2 class="case-h2">Outcome</h2>
+        <p class="case-h3">From paper logs to a live warehouse layer — enterprise scale next.</p>
+        <p class="case-p">Storage assignments are now logged the moment materials leave inspection. Transfer records are created the moment materials move. Factory admins have real-time capacity across every Bay, Shelf, and Bin without making a single call to the floor.</p>
+        <div class="case-metric-grid">
+          <div class="case-metric"><p class="case-metric-value">30–35</p><p class="case-metric-label">Factories in planned rollout across Young One's network</p></div>
+          <div class="case-metric"><p class="case-metric-value">Young One</p><p class="case-metric-label">First enterprise client — Korea-based, one of Asia's largest apparel manufacturers with factories across 10+ countries</p></div>
+          <div class="case-metric"><p class="case-metric-value">0</p><p class="case-metric-label">Paper location logs remaining in onboarded factories</p></div>
+          <div class="case-metric"><p class="case-metric-value">Live</p><p class="case-metric-label">Real-time capacity visibility across all warehouse locations, driven by actual assignments</p></div>
+        </div>
+        <div class="unexpected">
+          <p class="unexpected-tag">On enterprise deployment</p>
+          <p class="case-p">Young One's rollout is phased by design — one factory goes live first, processes are refined against real operations, and the system scales across their network from there. That was a client requirement, not a product limitation. Enterprise manufacturers at this scale need confidence before committing infrastructure across dozens of facilities. Getting selected as the system they trust to prove that case is the metric that matters most right now.</p>
+        </div>
+      </section>
+
+      <section class="case-section" id="wm-looking-back">
+        <h2 class="case-h2">Looking Back</h2>
+        <p class="case-h3">What I'd do differently</p>
+        <div class="reflection-item">
+          <p class="insight-title">The analytics layer is still missing</p>
+          <p class="case-p">The system captures every storage assignment, transfer, and location change. But there's no dashboard that surfaces patterns — which locations are consistently over capacity, which suppliers' materials move most frequently, where bottlenecks form during peak periods. That data exists inside the system. A utilization analytics layer would turn the WMS from a coordination tool into an operational planning tool.</p>
+        </div>
+        <div class="reflection-item">
+          <p class="insight-title">Pre-system migration was harder than expected</p>
+          <p class="case-p">Any fabric already in the warehouse before go-live had to be manually entered during onboarding. That process created a period where the digital record and physical reality were partially out of sync. A bulk scan-in flow for existing inventory at onboarding would have made that transition faster and more accurate.</p>
+        </div>
+        <div class="reflection-item">
+          <p class="insight-title">Enterprise scale changes the design brief</p>
+          <p class="case-p">Young One came with specific requirements — their warehouse structure, transfer flows, and location hierarchy needed to match existing operational practices exactly. That meant designing to a fixed brief rather than a flexible default. In hindsight, the better approach would have been to establish a strong generic system first — one default flow that works for any factory — and then layer client-specific configurations on top. We're working backwards to that now: extracting the default from what we built for Young One, so future clients get a configurable product rather than a custom one.</p>
+        </div>
+      </section>
+
+      <section class="other-projects">
+        <h2 class="case-h2">Other Projects</h2>
+        <div class="other-project-grid">
+          <a class="other-project-card" href="machine-maintenance.html">
+            <p class="other-project-title">Machine Maintenance Platform</p>
+            <p class="other-project-desc">Mobile-first maintenance system for factory floors — cutting machine downtime by 60% across 20+ factories in Asia.</p>
+            <p class="other-project-cta">View case study →</p>
+          </a>
+          <a class="other-project-card" href="Fabric-inspection.html">
+            <p class="other-project-title">Fabric Inspection System</p>
+            <p class="other-project-desc">Touch-first kiosk system that replaced a third-party tool — improving inspection efficiency by 35–45% across 50+ factories.</p>
+            <p class="other-project-cta">View case study →</p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<div class="screen-modal" id="screen-modal" hidden>
+  <div class="screen-modal-backdrop" data-action="close-modal"></div>
+  <div class="screen-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="screen-modal-title">
+    <div class="screen-modal-head">
+      <p class="screen-modal-title" id="screen-modal-title">Enlarged screens</p>
+      <button class="solution-control-btn" type="button" data-action="close-modal">Minimise</button>
+    </div>
+    <div class="screen-modal-body" id="screen-modal-body"></div>
+  </div>
+</div>
+<footer class="footer">
+  <div class="wrap">
+    <span class="footer-l">© 2026 Gaurav Borra</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/gaurav-reddy" class="footer-link">LinkedIn</a>
+      <a href="portfolio.html" class="footer-link">Back to Home</a>
+    </div>
+  </div>
+</footer>
+<script>
+const wmdState = { index: 0, localTheme: null, total: 3, animating: false };
+const WMD_ASSET_VERSION = '20260414-1';
+const wmdPreloaded = new Set();
+function getWmdImagePath(index, theme) {
+  return `assets/MM_Screens/WMD/WMD_${index + 1}.${theme === 'light' ? 'White' : 'Dark'}.png?v=${WMD_ASSET_VERSION}`;
+}
+function preloadWmdTheme(theme) {
+  for (let i = 0; i < wmdState.total; i += 1) {
+    const src = getWmdImagePath(i, theme);
+    if (wmdPreloaded.has(src)) continue;
+    const img = new Image();
+    img.src = src;
+    wmdPreloaded.add(src);
+  }
+}
+function getWmdTheme(globalTheme) {
+  return wmdState.localTheme || globalTheme;
+}
+function updateWmdThemeToggle(theme) {
+  const toggle = document.getElementById('wmd-theme-toggle');
+  if (!toggle) return;
+  toggle.dataset.mode = theme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = document.getElementById('wmd-toggle-icon');
+  if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = theme === 'light' ? '☀' : '☽';
+}
+function renderWmd() {
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getWmdTheme(globalTheme);
+  const image = document.getElementById('wmd-image');
+  if (image && !wmdState.animating) image.setAttribute('src', getWmdImagePath(wmdState.index, activeTheme));
+  const dots = Array.from(document.querySelectorAll('#wmd-dots .lrs-dot'));
+  dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === wmdState.index));
+  updateWmdThemeToggle(activeTheme);
+}
+function slideWmd(direction) {
+  if (wmdState.animating) return;
+  const stage = document.querySelector('#wmd-carousel .lrs-stage');
+  const current = document.getElementById('wmd-image');
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const activeTheme = getWmdTheme(globalTheme);
+  if (!stage || !current) return;
+  const targetIndex = direction === 'next'
+    ? (wmdState.index + 1) % wmdState.total
+    : (wmdState.index - 1 + wmdState.total) % wmdState.total;
+  preloadWmdTheme(activeTheme);
+  const incoming = current.cloneNode(true);
+  incoming.removeAttribute('id');
+  incoming.classList.add('lrs-image-incoming');
+  incoming.setAttribute('src', getWmdImagePath(targetIndex, activeTheme));
+  incoming.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+  stage.appendChild(incoming);
+  wmdState.animating = true;
+  requestAnimationFrame(() => {
+    current.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+    incoming.style.transform = 'translateX(0)';
+  });
+  incoming.addEventListener('transitionend', () => {
+    wmdState.index = targetIndex;
+    current.setAttribute('src', getWmdImagePath(wmdState.index, activeTheme));
+    current.style.transition = 'none';
+    current.style.transform = 'translateX(0)';
+    void current.offsetWidth;
+    current.style.transition = '';
+    incoming.remove();
+    wmdState.animating = false;
+    renderWmd();
+  }, { once: true });
+}
+function syncWmdToGlobalTheme(globalTheme) {
+  if (!wmdState.localTheme) {
+    updateWmdThemeToggle(globalTheme);
+    renderWmd();
+  }
+}
+function initWmdCarousel() {
+  const prev = document.getElementById('wmd-prev');
+  const next = document.getElementById('wmd-next');
+  const toggle = document.getElementById('wmd-theme-toggle');
+  if (!prev || !next || !toggle) return;
+  prev.addEventListener('click', () => {
+    slideWmd('prev');
+  });
+  next.addEventListener('click', () => {
+    slideWmd('next');
+  });
+  toggle.addEventListener('click', () => {
+    const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const activeTheme = getWmdTheme(globalTheme);
+    wmdState.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    renderWmd();
+  });
+  const globalTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  preloadWmdTheme('dark');
+  preloadWmdTheme('light');
+  updateWmdThemeToggle(globalTheme);
+  renderWmd();
+}
+function applyThemedImagesIn(container, theme) {
+  const useLight = theme === 'light';
+  container.querySelectorAll('.shift-themed-image').forEach((img) => {
+    const nextSrc = useLight ? img.dataset.lightSrc : img.dataset.darkSrc;
+    if (nextSrc && img.getAttribute('src') !== nextSrc) img.setAttribute('src', nextSrc);
+  });
+}
+function getActiveGalleryTheme(galleryId, siteTheme) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return siteTheme;
+  return gallery.dataset.localTheme || siteTheme;
+}
+function updateGalleryToggleLabel(galleryId, siteTheme) {
+  const toggle = document.querySelector(`.section-theme-toggle[data-target-gallery="${galleryId}"]`);
+  if (!toggle) return;
+  const activeTheme = getActiveGalleryTheme(galleryId, siteTheme);
+  toggle.dataset.mode = activeTheme;
+  const label = toggle.querySelector('.section-toggle-label');
+  const icon = toggle.querySelector('.section-toggle-icon');
+  if (label) label.textContent = activeTheme === 'light' ? 'Light' : 'Dark';
+  if (icon) icon.textContent = activeTheme === 'light' ? '☀' : '☽';
+}
+function applyGalleryTheme(galleryId, siteTheme) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return;
+  const activeTheme = gallery.dataset.localTheme || siteTheme;
+  applyThemedImagesIn(gallery, activeTheme);
+  updateGalleryToggleLabel(galleryId, siteTheme);
+}
+function applyAllSectionGalleries(siteTheme) {
+  document.querySelectorAll('[data-section-gallery]').forEach((gallery) => {
+    applyGalleryTheme(gallery.id, siteTheme);
+  });
+}
+function openGalleryModal(galleryId, siteTheme) {
+  const gallery = document.getElementById(galleryId);
+  const modal = document.getElementById('screen-modal');
+  const modalBody = document.getElementById('screen-modal-body');
+  const modalTitle = document.getElementById('screen-modal-title');
+  if (!gallery || !modal || !modalBody || !modalTitle) return;
+  const pillar = gallery.closest('.pillar');
+  const title = pillar ? pillar.querySelector('.pillar-title') : null;
+  modalTitle.textContent = title ? `${title.textContent} - Enlarged screens` : 'Enlarged screens';
+  modalBody.innerHTML = '';
+  const clone = gallery.cloneNode(true);
+  clone.removeAttribute('id');
+  modalBody.appendChild(clone);
+  applyThemedImagesIn(modalBody, getActiveGalleryTheme(galleryId, siteTheme));
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function closeGalleryModal() {
+  const modal = document.getElementById('screen-modal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+}
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  const next = isLight ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  syncWmdToGlobalTheme(next);
+  applyAllSectionGalleries(next);
+  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+  document.getElementById('toggle-icon').textContent = isLight ? '☽' : '☀';
+  try { localStorage.setItem('gb-theme', next); } catch (e) {}
+}
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+  const action = button.dataset.action;
+  const galleryId = button.dataset.targetGallery;
+  const siteTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  if (action === 'toggle-gallery-theme' && galleryId) {
+    const gallery = document.getElementById(galleryId);
+    if (!gallery) return;
+    const activeTheme = getActiveGalleryTheme(galleryId, siteTheme);
+    gallery.dataset.localTheme = activeTheme === 'light' ? 'dark' : 'light';
+    applyGalleryTheme(galleryId, siteTheme);
+    return;
+  }
+  if (action === 'expand-gallery' && galleryId) {
+    openGalleryModal(galleryId, siteTheme);
+    return;
+  }
+  if (action === 'close-modal') {
+    closeGalleryModal();
+  }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeGalleryModal();
+});
+function updateSideNavActiveLink() {
+  const links = Array.from(document.querySelectorAll('.case-side-link[href^="#"]'));
+  if (!links.length) return;
+  const sections = links.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  const marker = window.scrollY + 120;
+  let activeId = null;
+  sections.forEach((section) => { if (section.offsetTop <= marker) activeId = section.id; });
+  if (!activeId && sections[0]) activeId = sections[0].id;
+  links.forEach((link) => link.classList.toggle('is-active', link.getAttribute('href') === `#${activeId}`));
+}
+window.addEventListener('scroll', updateSideNavActiveLink, { passive: true });
+window.addEventListener('resize', updateSideNavActiveLink);
+(function () {
+  try {
+    const saved = localStorage.getItem('gb-theme');
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+      applyAllSectionGalleries(saved);
+      const label = document.getElementById('theme-label');
+      const icon = document.getElementById('toggle-icon');
+      if (label) label.textContent = saved === 'light' ? 'Light' : 'Dark';
+      if (icon) icon.textContent = saved === 'light' ? '☀' : '☽';
+    }
+  } catch (e) {}
+  initWmdCarousel();
+  applyAllSectionGalleries(document.documentElement.getAttribute('data-theme') || 'dark');
+  updateSideNavActiveLink();
+})();
+</script>
+</body>
+</html>
