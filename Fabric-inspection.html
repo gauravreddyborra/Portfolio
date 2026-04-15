@@ -1157,5 +1157,25 @@ window.addEventListener('resize', updateSideNavActiveLink);
   updateSideNavActiveLink();
 })();
 </script>
+<script>
+// Clean URL — always show /casestudy, never expose hash or filename
+(function () {
+  // Set URL to /casestudy on page load
+  history.replaceState(null, '', '/casestudy');
+
+  // Intercept sidebar section link clicks — scroll without hash
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('.case-side-link[href^="#"]');
+    if (!link) return;
+    e.preventDefault();
+    var target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Keep URL as /casestudy — no hash
+    history.replaceState(null, '', '/casestudy');
+  });
+})();
+</script>
 </body>
 </html>
