@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Gaurav Borra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[data-theme="dark"] {
+  --bg: #0e0e0c;
+  --bg2: #161614;
+  --card: #141412;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #f0ede6;
+  --text-mid: #a0a09a;
+  --text-muted: #60605a;
+  --accent: #c8f76b;
+  --nav-bg: rgba(14,14,12,0.96);
+  --toggle-bg: #222220;
+  --toggle-border: rgba(255,255,255,0.1);
+  --toggle-knob: #f0ede6;
+  --btn-primary-bg: #ffffff;
+  --btn-primary-text: #0e0e0c;
+}
+[data-theme="light"] {
+  --bg: #faf9f6;
+  --bg2: #f0ede6;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.07);
+  --border-hover: rgba(0,0,0,0.14);
+  --text: #141410;
+  --text-mid: #4c4c48;
+  --text-muted: #909088;
+  --accent: #4a8a10;
+  --nav-bg: rgba(244,242,237,0.96);
+  --toggle-bg: #e0ddd6;
+  --toggle-border: rgba(0,0,0,0.1);
+  --toggle-knob: #141410;
+  --btn-primary-bg: #141410;
+  --btn-primary-text: #ffffff;
+}
+:root {
+  --serif: 'Fraunces', Georgia, serif;
+  --mono: 'Geist', monospace;
+  --sans: 'Geist', sans-serif;
+  --col: 920px;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: var(--col); margin: 0 auto; padding: 0 1.25rem; }
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+.nav .wrap {
+  height: 54px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo {
+  font-family: Fraunces;
+  font-size: 12px; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 1px; }
+.nav-link {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px;
+  font-size: 11.5px; font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+.nav-link:hover { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.nav-link.is-active { color: var(--text); border-color: var(--border); background: var(--bg2); }
+.nav-num { font-family: var(--mono); font-size: 9px; color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 1.25rem; }
+.theme-toggle { display: flex; align-items: center; gap: 7px; cursor: pointer; user-select: none; }
+.toggle-track {
+  width: 38px; height: 21px;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 100px;
+  position: relative;
+}
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 13px; height: 13px;
+  border-radius: 50%; background: var(--toggle-knob);
+  transition: transform 0.25s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px;
+}
+[data-theme="light"] .toggle-knob { transform: translateX(17px); }
+.toggle-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; width: 26px; }
+.contact-page { padding: clamp(2rem, 5vw, 4rem) 0 4rem; }
+.contact-shell {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  padding: clamp(1.2rem, 2.8vw, 2rem);
+}
+.contact-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+.contact-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 0.98;
+  margin-bottom: 0.8rem;
+}
+.contact-sub {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-mid);
+  margin-bottom: 1.6rem;
+  max-width: 72ch;
+}
+.contact-form { display: grid; gap: 1rem; }
+.form-row { display: grid; gap: 0.4rem; }
+.form-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.form-input,
+.form-textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  padding: 0.82rem 0.9rem;
+}
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--border-hover);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.form-textarea { min-height: 150px; resize: vertical; }
+.form-submit {
+  margin-top: 0.25rem;
+  border: 1px solid var(--btn-primary-bg);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-radius: 10px;
+  padding: 0.85rem 1.1rem;
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.form-submit:hover { opacity: 0.92; }
+.contact-note {
+  margin-top: 0.75rem;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+@media (max-width: 760px) {
+  .nav-links { display: none; }
+  .contact-shell { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap">
+    <a href="/" class="nav-logo" aria-label="Go to home">GB</a>
+    <div class="nav-links">
+      <a href="/#work" class="nav-link"><span class="nav-num">01</span> Work</a>
+      <a href="/#experience" class="nav-link"><span class="nav-num">02</span> Experience</a>
+      <a href="/#about" class="nav-link"><span class="nav-num">03</span> About</a>
+      <a href="contact.html" class="nav-link is-active"><span class="nav-num">04</span> Contact</a>
+    </div>
+    <div class="nav-right">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="toggle-label" id="theme-label">Dark</span>
+        <div class="toggle-track">
+          <div class="toggle-knob"><span id="toggle-icon">☽</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="contact-page">
+  <div class="wrap">
+    <section class="contact-shell" aria-labelledby="contact-title">
+      <p class="contact-kicker">Want to build and solve things together?</p>
+      <h1 class="contact-title" id="contact-title">Get in touch</h1>
+      <p class="contact-sub">Product, UX, systems, and execution in one line. Share what you are building and I will get back quickly.</p>
+
+      <form id="contact-form" class="contact-form" action="mailto:gauravborra.work@gmail.com" method="post" enctype="text/plain">
+        <div class="form-row">
+          <label class="form-label" for="name">Name</label>
+          <input class="form-input" id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-input" id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="message">Message</label>
+          <textarea class="form-textarea" id="message" name="message" placeholder="Let me know what you have in mind." required></textarea>
+        </div>
+        <button class="form-submit" type="submit">Submit</button>
+      </form>
+    </section>
+  </div>
+</main>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  const next = isLight ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+  document.getElementById('toggle-icon').textContent = isLight ? '☽' : '☀';
+  try { localStorage.setItem('gb-theme', next); } catch (e) {}
+}
+
+document.getElementById('contact-form').addEventListener('submit', function (event) {
+  event.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const subject = encodeURIComponent(`Portfolio inquiry from ${name || 'Website visitor'}`);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+  window.location.href = `mailto:gauravborra.work@gmail.com?subject=${subject}&body=${body}`;
+});
+
+(function () {
+  try {
+    const saved = localStorage.getItem('gb-theme');
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+      const label = document.getElementById('theme-label');
+      const icon = document.getElementById('toggle-icon');
+      if (label) label.textContent = saved === 'light' ? 'Light' : 'Dark';
+      if (icon) icon.textContent = saved === 'light' ? '☀' : '☽';
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
