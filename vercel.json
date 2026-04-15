@@ -1,5 +1,8 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/portfolio", "destination": "/", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/portfolio.html" }
   ]
