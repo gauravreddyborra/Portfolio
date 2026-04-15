@@ -784,13 +784,35 @@ a { color: inherit; text-decoration: none; }
   will-change: transform;
 }
 #cursor-hover-card.is-visible { opacity: 1; }
+/* cursor card CSS variables — dark mode defaults */
+#cursor-hover-card {
+  --chc-bg:         rgba(8,8,6,0.93);
+  --chc-border:     rgba(255,255,255,0.1);
+  --chc-title:      #f0ede6;
+  --chc-em:         rgba(240,237,230,0.45);
+  --chc-desc:       rgba(240,237,230,0.46);
+  --chc-cta-bg:     rgba(255,255,255,0.1);
+  --chc-cta-border: rgba(255,255,255,0.15);
+  --chc-cta-color:  #f0ede6;
+}
+[data-theme="light"] #cursor-hover-card {
+  --chc-bg:         rgba(255,255,252,0.96);
+  --chc-border:     rgba(0,0,0,0.09);
+  --chc-title:      #141410;
+  --chc-em:         rgba(20,20,16,0.42);
+  --chc-desc:       rgba(20,20,16,0.52);
+  --chc-cta-bg:     rgba(0,0,0,0.05);
+  --chc-cta-border: rgba(0,0,0,0.12);
+  --chc-cta-color:  #141410;
+}
 .chc-inner {
-  background: rgba(8,8,6,0.93);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--chc-bg);
+  border: 1px solid var(--chc-border);
   border-radius: 12px;
   padding: 1rem 1.2rem 1.1rem;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
 }
 .chc-label {
   font-family: var(--mono);
@@ -806,19 +828,19 @@ a { color: inherit; text-decoration: none; }
   font-weight: 600;
   font-optical-sizing: auto;
   line-height: 1.2;
-  color: #fff;
+  color: var(--chc-title);
   letter-spacing: -0.015em;
   margin-bottom: 0.4rem;
 }
 .chc-title em {
   font-style: italic;
   font-weight: 400;
-  color: rgba(255,255,255,0.5);
+  color: var(--chc-em);
 }
 .chc-desc {
   font-size: 10.5px;
   line-height: 1.65;
-  color: rgba(255,255,255,0.48);
+  color: var(--chc-desc);
   margin-bottom: 0.7rem;
 }
 .chc-cta {
@@ -829,9 +851,9 @@ a { color: inherit; text-decoration: none; }
   font-size: 8.5px;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: #fff;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--chc-cta-color);
+  background: var(--chc-cta-bg);
+  border: 1px solid var(--chc-cta-border);
   border-radius: 20px;
   padding: 5px 11px;
 }
