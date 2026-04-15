@@ -1190,74 +1190,6 @@ function toggleTheme() {
     }
   } catch(e) {}
 })();
-
-  // ── Cursor-following hover card ──────────────────────────────────────────
-  (function () {
-    var card = document.getElementById('cursor-hover-card');
-    if (!card) return;
-    var label = card.querySelector('.chc-label');
-    var title = card.querySelector('.chc-title');
-    var desc  = card.querySelector('.chc-desc');
-
-    var cardData = {
-      'cs-machine-maintenance': {
-        label: 'Machine Maintenance System — Solvei8',
-        title: 'When one machine breaks down, <em>the whole line stops</em>',
-        desc:  'Factories were losing hours to breakdowns tracked on paper and resolved over WhatsApp. I designed a mobile-first platform giving floor teams real-time coordination.'
-      },
-      'cs-fabric-inspection': {
-        label: 'Fabric Inspection System — Solvei8',
-        title: "Bad fabric doesn't get caught at the machine — <em>it gets caught too late</em>",
-        desc:  'Quality inspectors used a third-party tool with deep navigation and small touch targets. I redesigned inspection as a touch-first kiosk system, cutting time by 35–45%.'
-      },
-      'cs-warehouse-management': {
-        label: 'Warehouse Management System — Solvei8',
-        title: "Nobody knew where the fabric was — <em>until production needed it</em>",
-        desc:  'Warehouse staff logged fabric locations on paper and coordinated over WhatsApp. I designed a mobile-desktop system replacing manual coordination with digital traceability.'
-      }
-    };
-
-    var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-    var curX = mouseX, curY = mouseY;
-    var raf = null;
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-
-    function tick() {
-      curX = lerp(curX, mouseX, 0.13);
-      curY = lerp(curY, mouseY, 0.13);
-      var cx = curX + 22;
-      var cy = curY + 16;
-      // keep within viewport
-      var w = card.offsetWidth || 300;
-      var h = card.offsetHeight || 200;
-      if (cx + w > window.innerWidth - 12) cx = curX - w - 18;
-      if (cy + h > window.innerHeight - 12) cy = curY - h - 12;
-      card.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
-      raf = requestAnimationFrame(tick);
-    }
-
-    document.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-
-    document.querySelectorAll('.wcard').forEach(function(wcard) {
-      wcard.addEventListener('mouseenter', function() {
-        var data = cardData[wcard.id];
-        if (!data) return;
-        label.textContent = data.label;
-        title.innerHTML   = data.title;
-        desc.textContent  = data.desc;
-        card.classList.add('is-visible');
-        if (!raf) tick();
-      });
-      wcard.addEventListener('mouseleave', function() {
-        card.classList.remove('is-visible');
-        if (raf) { cancelAnimationFrame(raf); raf = null; }
-      });
-    });
-  })();
 </script>
 
 <div id="cursor-hover-card" aria-hidden="true">
@@ -1268,5 +1200,78 @@ function toggleTheme() {
     <span class="chc-cta">View Case Study →</span>
   </div>
 </div>
+
+<script>
+(function () {
+  var card = document.getElementById('cursor-hover-card');
+  if (!card) return;
+  var labelEl = card.querySelector('.chc-label');
+  var titleEl = card.querySelector('.chc-title');
+  var descEl  = card.querySelector('.chc-desc');
+
+  var cardData = {
+    'cs-machine-maintenance': {
+      label: 'Machine Maintenance System — Solvei8',
+      title: 'When one machine breaks down, <em>the whole line stops</em>',
+      desc:  'Factories were losing hours to breakdowns tracked on paper and resolved over WhatsApp. I designed a mobile-first platform giving floor teams real-time coordination.'
+    },
+    'cs-fabric-inspection': {
+      label: 'Fabric Inspection System — Solvei8',
+      title: "Bad fabric doesn’t get caught at the machine — <em>it gets caught too late</em>",
+      desc:  'Quality inspectors used a third-party tool with deep navigation and small touch targets. I redesigned inspection as a touch-first kiosk system, cutting time by 35–45%.'
+    },
+    'cs-warehouse-management': {
+      label: 'Warehouse Management System — Solvei8',
+      title: "Nobody knew where the fabric was — <em>until production needed it</em>",
+      desc:  'Warehouse staff logged fabric locations on paper and coordinated over WhatsApp. I designed a connected mobile-desktop system replacing manual work with digital traceability.'
+    }
+  };
+
+  var mouseX = 0, mouseY = 0;
+  var curX = 0, curY = 0;
+  var raf = null;
+  var visible = false;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function tick() {
+    curX = lerp(curX, mouseX, 0.14);
+    curY = lerp(curY, mouseY, 0.14);
+    var ox = curX + 24;
+    var oy = curY + 18;
+    var w = 300, h = card.offsetHeight || 200;
+    if (ox + w > window.innerWidth - 10) ox = curX - w - 20;
+    if (oy + h > window.innerHeight - 10) oy = curY - h - 16;
+    card.style.transform = 'translate(' + ox + 'px,' + oy + 'px)';
+    if (visible) raf = requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('mousemove', function (e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  document.querySelectorAll('.wcard').forEach(function (wcard) {
+    wcard.addEventListener('mouseenter', function () {
+      var data = cardData[wcard.id];
+      if (!data) return;
+      labelEl.textContent = data.label;
+      titleEl.innerHTML   = data.title;
+      descEl.textContent  = data.desc;
+      visible = true;
+      card.classList.add('is-visible');
+      curX = mouseX; curY = mouseY;
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(tick);
+    });
+    wcard.addEventListener('mouseleave', function () {
+      visible = false;
+      card.classList.remove('is-visible');
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
