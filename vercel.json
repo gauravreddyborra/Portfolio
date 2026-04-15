@@ -1,9 +1,7 @@
 {
   "cleanUrls": true,
   "redirects": [
-    { "source": "/portfolio", "destination": "/", "permanent": true }
-  ],
-  "rewrites": [
-    { "source": "/", "destination": "/portfolio.html" }
+    { "source": "/portfolio", "destination": "/", "permanent": true },
+    { "source": "/index", "destination": "/", "permanent": true }
   ]
 }
