@@ -477,8 +477,7 @@ a { color: inherit; text-decoration: none; }
   background-repeat: no-repeat;
 }
 [data-theme="light"] .tl-quote-textblock::after {
-  display: block;
-  background: linear-gradient(180deg, rgba(14,14,12,0.16) 0%, rgba(14,14,12,0.52) 62%, rgba(14,14,12,0.78) 100%);
+  display: none;
 }
 [data-theme="light"] .tl-quote-main,
 [data-theme="light"] .tl-quote-meta {
@@ -1018,7 +1017,11 @@ a { color: inherit; text-decoration: none; }
     aspect-ratio: 4 / 3;
     justify-content: flex-end;
     padding: 1.3rem 1.1rem 1.1rem;
-    overflow: visible;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  .tl-quote-textblock::before {
+    background-position: top center;
   }
   .tl-quote-main {
     font-size: clamp(1.45rem, 7.2vw, 1.95rem);
