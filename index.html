@@ -495,16 +495,33 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   justify-content: flex-end;
 }
-.footer .wrap {
-  max-width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
+.footer-reveal {
+  width: 100%;
+}
+.foot-topbar,
+.foot-main,
+.foot-grid-wrap,
+.foot-marquee,
+.footer-bottom {
+  width: 100%;
+  box-sizing: border-box;
+}
+.foot-topbar-inner,
+.footer-bottom-inner {
+  width: 100%;
+  padding-left: clamp(1rem, 3vw, 2rem);
+  padding-right: clamp(1rem, 3vw, 2rem);
+  box-sizing: border-box;
+}
+.foot-grid-wrap {
+  padding-left: clamp(1rem, 3vw, 2rem);
+  padding-right: clamp(1rem, 3vw, 2rem);
 }
 .foot-topbar {
   border-bottom: 1px solid var(--foot-border);
   background: var(--foot-bg);
 }
-.foot-topbar .wrap {
+.foot-topbar-inner {
   min-height: 54px;
   display: flex;
   align-items: center;
@@ -685,7 +702,7 @@ a { color: inherit; text-decoration: none; }
   border-top: 1px solid var(--foot-border);
   background: var(--foot-bg);
 }
-.footer-bottom .wrap {
+.footer-bottom-inner {
   min-height: 56px;
   display: flex;
   align-items: center;
@@ -731,40 +748,42 @@ a { color: inherit; text-decoration: none; }
   --foot-wordmark: rgba(240,237,230,0.12);
 }
 @media (max-width: 1024px) {
-  .footer-bottom .wrap {
+  .footer-bottom-inner {
     flex-wrap: wrap;
-    gap: 0.5rem 1.2rem;
+    gap: 0.4rem 1.5rem;
     min-height: unset;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
   }
-  .footer-l {
-    width: 100%;
-  }
-  .footer-links {
-    flex-wrap: wrap;
-    gap: 0.6rem 1rem;
-  }
-  .foot-topbar .wrap {
+  .footer-l { width: 100%; }
+  .footer-links { flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .foot-topbar-inner {
     flex-wrap: wrap;
     min-height: unset;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
-    gap: 0.3rem 1rem;
-  }
-  .foot-cta {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .foot-grid-wrap {
-    padding-left: 0;
-    padding-right: 0;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    gap: 0.25rem 1rem;
   }
 }
 @media (max-width: 740px) {
-  .foot-topbar .wrap {
-    min-height: 44px;
+  .foot-topbar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
   }
+  .foot-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .foot-news-row { grid-template-columns: 1fr; }
+  .foot-marquee { padding: 1.25rem 0 1.1rem; }
+  .foot-marquee-track span { font-size: clamp(2.8rem, 16vw, 4.2rem); }
+  .footer-bottom-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+  }
+  .foot-cta-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+}
   .foot-top-item:nth-child(2) {
     display: none;
   }
@@ -780,7 +799,7 @@ a { color: inherit; text-decoration: none; }
   .foot-marquee-track span {
     font-size: clamp(3.2rem, 18vw, 4.6rem);
   }
-  .footer-bottom .wrap {
+  .footer-bottom-inner {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
@@ -1150,7 +1169,7 @@ a { color: inherit; text-decoration: none; }
 <footer class="footer" id="site-footer">
   <div class="footer-reveal">
     <div class="foot-topbar">
-      <div class="wrap">
+      <div class="foot-topbar-inner">
         <p class="foot-top-item">Hyderabad</p>
         <p class="foot-top-item foot-top-item-time" id="ist-time">IST --:--</p>
       </div>
@@ -1164,7 +1183,7 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
 
-    <div class="wrap foot-grid-wrap">
+    <div class="foot-grid-wrap">
       <div class="foot-grid">
         <div>
           <p class="foot-col-title">Sitemap</p>
@@ -1196,7 +1215,7 @@ a { color: inherit; text-decoration: none; }
     </div>
 
     <div class="footer-bottom">
-      <div class="wrap">
+      <div class="footer-bottom-inner">
         <span class="footer-l">© 2026 Gaurav Borra · All rights reserved</span>
         <a href="mailto:gauravborra.work@gmail.com" class="footer-link">Mail - Gauravborra.work@gmail.com</a>
         <div class="footer-links">
