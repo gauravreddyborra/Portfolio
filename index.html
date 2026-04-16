@@ -828,10 +828,11 @@ a { color: inherit; text-decoration: none; }
     margin-right: 8px;
     font-size: 14px;
     line-height: 1;
-    color: var(--text);
+    color: #ffffff;
   }
   [data-theme="light"] .theme-toggle::before {
     content: "☽";
+    color: #ffffff;
   }
   .toggle-knob {
     width: 16px;
@@ -910,6 +911,8 @@ a { color: inherit; text-decoration: none; }
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 0.6rem;
     padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
     gap: 0;
   }
   .h-stat {
@@ -941,6 +944,7 @@ a { color: inherit; text-decoration: none; }
     gap: 0.75rem;
     margin-top: 1.25rem;
     margin-bottom: 0;
+    display: none;
   }
   .hero-actions .btn-p,
   .hero-actions .btn-s {
@@ -987,6 +991,29 @@ a { color: inherit; text-decoration: none; }
   .tl-quote-textblock {
     width: 100%;
     min-height: 260px;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    justify-content: flex-end;
+    padding: 1.3rem 1.1rem 1.1rem;
+    overflow: visible;
+  }
+  .tl-quote-main {
+    font-size: clamp(1.45rem, 7.2vw, 1.95rem);
+    max-width: 18ch;
+    line-height: 1.07;
+  }
+  .tl-quote-meta {
+    margin-top: 0.7rem;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+  .tl-quote-textblock::before {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top center;
+  }
+  .tl-quote-textblock::after {
+    background: linear-gradient(180deg, rgba(14,14,12,0.14) 0%, rgba(14,14,12,0.45) 55%, rgba(14,14,12,0.78) 100%);
   }
   .about-quote-ctx {
     width: 100%;
