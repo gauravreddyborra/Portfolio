@@ -187,7 +187,7 @@ a { color: inherit; text-decoration: none; }
 
 /* STATS */
 .hero-stats {
-  display: grid; grid-template-columns: repeat(4,1fr);
+  display: grid; grid-template-columns: repeat(3,1fr);
   margin-top: 3rem; padding-top: 2rem;
   border-top: 1px solid var(--border);
   gap: 0;
@@ -945,12 +945,13 @@ a { color: inherit; text-decoration: none; }
   .h-stat:nth-child(-n+2) {
     border-bottom: 1px solid var(--border);
   }
-  .h-stat:nth-child(3),
-  .h-stat:nth-child(4) {
+  .h-stat:nth-child(3) {
     padding-top: 1rem;
   }
   .h-stat:last-child {
     border-right: none;
+    grid-column: 1 / -1;
+    padding-left: 0;
   }
   .hero-actions {
     order: 4;
@@ -1230,7 +1231,6 @@ a { color: inherit; text-decoration: none; }
       <div class="hero-stats">
         <div class="h-stat"><div class="h-stat-n ac">130+</div><div class="h-stat-l">Factories<br>globally</div></div>
         <div class="h-stat"><div class="h-stat-n">8</div><div class="h-stat-l">Countries<br>deployed</div></div>
-        <div class="h-stat"><div class="h-stat-n">20M</div><div class="h-stat-l">Articles<br>per month</div></div>
         <div class="h-stat"><div class="h-stat-n">6</div><div class="h-stat-l">Verticals<br>led</div></div>
       </div>
     </div>
