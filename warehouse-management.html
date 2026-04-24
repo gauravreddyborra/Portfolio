@@ -461,12 +461,12 @@ a { color: inherit; text-decoration: none; }
     </aside>
     <div class="case-main">
       <header class="case-header" id="wm-context">
-        <p class="case-kicker">Warehouse Management System — Solvei8</p>
+        <p class="case-kicker">Warehouse Management System · Solvei8</p>
         <h1 class="case-title">Nobody knew where the fabric was — <em>until production needed it</em></h1>
-        <p class="case-subtitle">Warehouse staff were logging fabric locations on paper and coordinating transfers over WhatsApp. Factory admins had no real-time view of capacity. I designed a connected mobile-desktop system that replaced manual coordination with digital traceability — now being deployed across Young One, one of Asia's largest apparel manufacturers with operations across 10+ countries.</p>
+        <p class="case-subtitle">Warehouse staff were logging fabric locations on paper and coordinating transfers over WhatsApp. Factory admins had no real-time view of capacity. I designed a connected mobile-desktop system that replaced manual coordination with digital traceability. It is now being deployed across Young One, one of Asia's largest apparel manufacturers with operations across 10+ countries.</p>
         <div class="case-metric-grid">
           <div class="case-metric"><p class="case-metric-value">30–35</p><p class="case-metric-label">Factories in planned rollout</p></div>
-          <div class="case-metric"><p class="case-metric-value">Young One</p><p class="case-metric-label">First enterprise client — Korea-based, one of Asia's largest apparel manufacturers</p></div>
+          <div class="case-metric"><p class="case-metric-value">Young One</p><p class="case-metric-label">First enterprise client (Korea-based), one of Asia's largest apparel manufacturers</p></div>
           <div class="case-metric"><p class="case-metric-value">0</p><p class="case-metric-label">Paper location logs remaining in onboarded factories</p></div>
         </div>
         <div class="meta-row">
@@ -488,27 +488,27 @@ a { color: inherit; text-decoration: none; }
       <section class="case-section" id="wm-problem">
         <h2 class="case-h2">The Problem</h2>
         <p class="case-h3">The warehouse ran on paper logs and WhatsApp messages</p>
-        <p class="case-p">In apparel manufacturing, fabric and trims are inspected, stored, and moved constantly before they reach production. The accuracy of that movement is critical — a misplaced roll during a deadline order can stall an entire line.</p>
-        <p class="case-p">Before this system, there was no structured way to manage any of it. Locations were written on paper registers that went missing or became illegible. Transfers were coordinated through email and WhatsApp with no way to verify they actually happened. Factory admins had no real-time view of what was stored where — they either had to call someone or physically walk the floor.</p>
+        <p class="case-p">In apparel manufacturing, fabric and trims are inspected, stored, and moved constantly before they reach production. The accuracy of that movement is critical: a misplaced roll during a deadline order can stall an entire line.</p>
+        <p class="case-p">Before this system, there was no structured way to manage any of it. Locations were written on paper registers that went missing or became illegible. Transfers were coordinated through email and WhatsApp with no way to verify they actually happened. Factory admins had no real-time view of what was stored where. They either had to call someone or physically walk the floor.</p>
         <div class="problem-grid">
           <div class="case-card"><p class="case-card-title">Paper location records</p><p class="case-card-text">Storage assignments logged by hand. Incomplete, illegible, and inaccessible to anyone not holding the register.</p></div>
           <div class="case-card"><p class="case-card-title">No transfer verification</p><p class="case-card-text">Materials moved through email and WhatsApp coordination. No confirmation a transfer happened, or when.</p></div>
           <div class="case-card"><p class="case-card-title">No live capacity view</p><p class="case-card-text">Factory admins couldn't see which locations were full or available without physically checking. Inbound planning was guesswork.</p></div>
           <div class="case-card"><p class="case-card-title">Disconnected from production</p><p class="case-card-text">When a production team needed specific fabric, there was no system to tell them where it was. Searching was the only option.</p></div>
         </div>
-        <div class="tradeoff">The warehouse operated on manual communication and guesswork — inefficient in any environment, critical in a time-pressured factory.</div>
+        <div class="tradeoff">The warehouse operated on manual communication and guesswork: inefficient in any environment, and critical in a time-pressured factory.</div>
       </section>
 
       <section class="case-section" id="wm-learnings">
         <h2 class="case-h2">Findings</h2>
         <p class="case-h3">Four things that shaped the architecture</p>
-        <p class="case-p">Insights came through workflow mapping of the paper-based process, operational feedback from warehouse staff and factory admins, and direct client requirements on why existing WMS solutions weren't working. A clear split emerged early between what mobile needed to do and what desktop needed to do — and that split drove every structural decision.</p>
+        <p class="case-p">Insights came through workflow mapping of the paper-based process, operational feedback from warehouse staff and factory admins, and direct client requirements on why existing WMS solutions weren't working. A clear split emerged early between what mobile needed to do and what desktop needed to do, and that split drove every structural decision.</p>
         <div class="insight-list">
           <article class="insight">
             <p class="insight-num">01</p>
             <div>
               <p class="insight-title">Storage has to happen on the floor, not at a desk</p>
-              <p class="case-p">After inspection, warehouse staff are standing with physical rolls in hand. Any workflow that required returning to a desktop to log a location would be skipped — or done hours later from memory. The assignment had to happen in the moment, on mobile, while the material was still in hand.</p>
+              <p class="case-p">After inspection, warehouse staff are standing with physical rolls in hand. Any workflow that required returning to a desktop to log a location would be skipped, or done hours later from memory. The assignment had to happen in the moment, on mobile, while the material was still in hand.</p>
               <p class="insight-decision">Mobile-first execution for all storage and transfer operations. Desktop reserved for configuration and monitoring.</p>
             </div>
           </article>
@@ -517,7 +517,7 @@ a { color: inherit; text-decoration: none; }
             <div>
               <p class="insight-title">Scanning beats typing, every time</p>
               <p class="case-p">Warehouse floors are active environments. Typing location codes manually under time pressure introduces errors that corrupt the entire location record downstream. But a broken scanner can't mean a broken workflow.</p>
-              <p class="insight-decision">Scanning as the primary method for all location interactions, with manual search as a reliable fallback — so the workflow never breaks due to equipment issues.</p>
+              <p class="insight-decision">Scanning as the primary method for all location interactions, with manual search as a reliable fallback so the workflow never breaks due to equipment issues.</p>
             </div>
           </article>
           <article class="insight">
@@ -525,7 +525,7 @@ a { color: inherit; text-decoration: none; }
             <div>
               <p class="insight-title">Capacity had to be calculated, not entered</p>
               <p class="case-p">If factory admins manually entered capacity estimates, the data was always one step behind reality. The only number worth trusting was one derived automatically from actual storage assignments.</p>
-              <p class="insight-decision">Capacity across every Bay → Shelf → Bin location updates in real time from mobile assignments — never from manual input.</p>
+              <p class="insight-decision">Capacity across every Bay → Shelf → Bin location updates in real time from mobile assignments, never from manual input.</p>
             </div>
           </article>
           <article class="insight">
@@ -533,7 +533,7 @@ a { color: inherit; text-decoration: none; }
             <div>
               <p class="insight-title">Transfers needed verification at both ends</p>
               <p class="case-p">A transfer logged at the source but not confirmed at the destination was just as unreliable as a paper log. The physical movement and the digital record had to happen together.</p>
-              <p class="insight-decision">Both source and destination locations scanned or selected to complete every transfer — creating a complete, error-resistant audit trail.</p>
+              <p class="insight-decision">Both source and destination locations scanned or selected to complete every transfer, creating a complete, error-resistant audit trail.</p>
             </div>
           </article>
         </div>
@@ -542,11 +542,11 @@ a { color: inherit; text-decoration: none; }
       <section class="case-section" id="wm-design">
         <h2 class="case-h2">The Design</h2>
         <p class="case-h3">Three flows, one architecture: mobile execution, desktop oversight</p>
-        <p class="case-p">Warehouse staff execute storage and transfers on mobile while physically handling materials. Factory admins configure structure and monitor capacity from desktop. All data syncs in real time. The two surfaces were designed for completely different contexts — but built to stay in sync.</p>
+        <p class="case-p">Warehouse staff execute storage and transfers on mobile while physically handling materials. Factory admins configure structure and monitor capacity from desktop. All data syncs in real time. The two surfaces were designed for completely different contexts, but built to stay in sync.</p>
         <div class="pillars">
           <article class="pillar">
             <div class="pillar-head"><p class="pillar-num">01</p><p class="pillar-title">Storage Assignment</p><p class="pillar-tag">Mobile</p></div>
-            <p class="case-p">Once fabric or trims pass inspection and a GRN is generated, warehouse staff assign materials to storage locations immediately — while still on the floor with the physical rolls. The flow is: select the GRN, choose rolls, scan the destination location, confirm.</p>
+            <p class="case-p">Once fabric or trims pass inspection and a GRN is generated, warehouse staff assign materials to storage locations immediately, while still on the floor with the physical rolls. The flow is: select the GRN, choose rolls, scan the destination location, confirm.</p>
             <p class="case-p">The location's available capacity is shown before roll selection so staff can see at a glance whether a location can take what they're storing. A live counter tracks selected vs. available capacity as rolls are chosen. Once confirmed, warehouse capacity updates instantly across the system.</p>
             <div class="solution-controls">
               <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="saf-gallery" data-mode="dark" aria-label="Toggle storage assignment screens theme">
@@ -570,13 +570,13 @@ a { color: inherit; text-decoration: none; }
               <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_5.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_5.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_5.White.png" alt="Storage assignment screen 5"></div></article>
               <article class="shift-shot"><div class="shift-shot-media"><img class="shift-themed-image" src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_6.Dark.png" data-dark-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/SAF_6.Dark.png" data-light-src="assets/MM_Screens/SAF/Storage_Assigning%20Fabric/Storage_Assignment%20confirmed.png" alt="Storage assignment screen 6"></div></article>
             </div>
-            <div class="tradeoff">Scanning was made the primary method, but a broken scanner can't mean a broken workflow. Manual search by location ID was built as a reliable fallback — so assignments could always be completed regardless of equipment conditions on the floor.</div>
+            <div class="tradeoff">Scanning was made the primary method, but a broken scanner can't mean a broken workflow. Manual search by location ID was built as a reliable fallback so assignments could always be completed regardless of equipment conditions on the floor.</div>
           </article>
 
           <article class="pillar">
             <div class="pillar-head"><p class="pillar-num">02</p><p class="pillar-title">Warehouse Management</p><p class="pillar-tag">Desktop</p></div>
-            <p class="case-p">Factory admins configure the warehouse structure — Bay → Shelf → Bin hierarchy — either by uploading a bulk Excel file or managing locations individually. The desktop dashboard shows live capacity utilization for every location, automatically calculated from mobile storage assignments. No manual input, no estimates — the number always reflects ground reality.</p>
-            <p class="case-p">Admins also generate printable QR code tags for each location directly from the dashboard. These tags are the physical-digital bridge — the codes warehouse staff scan during every storage and transfer operation to keep the system in sync with what's actually on the floor.</p>
+            <p class="case-p">Factory admins configure the warehouse structure (Bay → Shelf → Bin hierarchy) either by uploading a bulk Excel file or managing locations individually. The desktop dashboard shows live capacity utilization for every location, automatically calculated from mobile storage assignments. No manual input, no estimates: the number always reflects ground reality.</p>
+            <p class="case-p">Admins also generate printable QR code tags for each location directly from the dashboard. These tags are the physical-digital bridge: the codes warehouse staff scan during every storage and transfer operation to keep the system in sync with what's actually on the floor.</p>
             <div class="solution-controls">
               <button class="section-theme-toggle" id="wmd-theme-toggle" type="button" data-mode="dark" aria-label="Toggle warehouse management screens theme">
                 <span class="section-toggle-label">Dark</span>
@@ -599,13 +599,13 @@ a { color: inherit; text-decoration: none; }
                 <span class="lrs-dot"></span>
               </div>
             </div>
-            <div class="tradeoff">Making capacity a calculated value rather than an input field meant the number was always accurate — but it also meant any fabric stored before go-live had to be migrated in during onboarding. That migration was handled as an onboarding step, not built into the product, which added friction to the initial setup process.</div>
+            <div class="tradeoff">Making capacity a calculated value rather than an input field meant the number was always accurate, but it also meant any fabric stored before go-live had to be migrated in during onboarding. That migration was handled as an onboarding step, not built into the product, which added friction to the initial setup process.</div>
           </article>
 
           <article class="pillar">
             <div class="pillar-head"><p class="pillar-num">03</p><p class="pillar-title">Location Transfer</p><p class="pillar-tag">Mobile</p></div>
             <p class="case-p">When fabric or trims need to move between storage locations, warehouse staff execute the transfer on mobile while physically moving the material. They scan or select the source location, choose items to transfer, scan the destination, and confirm. Both locations update their capacity automatically.</p>
-            <p class="case-p">The confirmation screen shows source and destination locations, capacity percentages for both, and the selected items — one final check before committing. Items can still be deselected at this stage.</p>
+            <p class="case-p">The confirmation screen shows source and destination locations, capacity percentages for both, and the selected items as one final check before committing. Items can still be deselected at this stage.</p>
             <div class="solution-controls">
               <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="lt-gallery" data-mode="dark" aria-label="Toggle location transfer screens theme">
                 <span class="section-toggle-label">Dark</span>
@@ -652,24 +652,24 @@ a { color: inherit; text-decoration: none; }
                 </div>
               </article>
             </div>
-            <div class="tradeoff">Requiring both source and destination to be scanned or selected added one step to the transfer flow. But it was the only way to create a complete audit trail and prevent the most common transfer error — logging a move that only happened partially.</div>
+            <div class="tradeoff">Requiring both source and destination to be scanned or selected added one step to the transfer flow. But it was the only way to create a complete audit trail and prevent the most common transfer error: logging a move that only happened partially.</div>
           </article>
         </div>
       </section>
 
       <section class="case-section" id="wm-outcome">
         <h2 class="case-h2">Outcome</h2>
-        <p class="case-h3">From paper logs to a live warehouse layer — enterprise scale next.</p>
+        <p class="case-h3">From paper logs to a live warehouse layer. Enterprise scale next.</p>
         <p class="case-p">Storage assignments are now logged the moment materials leave inspection. Transfer records are created the moment materials move. Factory admins have real-time capacity across every Bay, Shelf, and Bin without making a single call to the floor.</p>
         <div class="case-metric-grid">
           <div class="case-metric"><p class="case-metric-value">30–35</p><p class="case-metric-label">Factories in planned rollout across Young One's network</p></div>
-          <div class="case-metric"><p class="case-metric-value">Young One</p><p class="case-metric-label">First enterprise client — Korea-based, one of Asia's largest apparel manufacturers with factories across 10+ countries</p></div>
+          <div class="case-metric"><p class="case-metric-value">Young One</p><p class="case-metric-label">First enterprise client (Korea-based), one of Asia's largest apparel manufacturers with factories across 10+ countries</p></div>
           <div class="case-metric"><p class="case-metric-value">0</p><p class="case-metric-label">Paper location logs remaining in onboarded factories</p></div>
           <div class="case-metric"><p class="case-metric-value">Live</p><p class="case-metric-label">Real-time capacity visibility across all warehouse locations, driven by actual assignments</p></div>
         </div>
         <div class="unexpected">
           <p class="unexpected-tag">On enterprise deployment</p>
-          <p class="case-p">Young One's rollout is phased by design — one factory goes live first, processes are refined against real operations, and the system scales across their network from there. That was a client requirement, not a product limitation. Enterprise manufacturers at this scale need confidence before committing infrastructure across dozens of facilities. Getting selected as the system they trust to prove that case is the metric that matters most right now.</p>
+          <p class="case-p">Young One's rollout is phased by design: one factory goes live first, processes are refined against real operations, and the system scales across their network from there. That was a client requirement, not a product limitation. Enterprise manufacturers at this scale need confidence before committing infrastructure across dozens of facilities. Getting selected as the system they trust to prove that case is the metric that matters most right now.</p>
         </div>
       </section>
 
@@ -678,7 +678,7 @@ a { color: inherit; text-decoration: none; }
         <p class="case-h3">What I'd do differently</p>
         <div class="reflection-item">
           <p class="insight-title">The analytics layer is still missing</p>
-          <p class="case-p">The system captures every storage assignment, transfer, and location change. But there's no dashboard that surfaces patterns — which locations are consistently over capacity, which suppliers' materials move most frequently, where bottlenecks form during peak periods. That data exists inside the system. A utilization analytics layer would turn the WMS from a coordination tool into an operational planning tool.</p>
+          <p class="case-p">The system captures every storage assignment, transfer, and location change. But there's no dashboard that surfaces patterns: which locations are consistently over capacity, which suppliers' materials move most frequently, where bottlenecks form during peak periods. That data exists inside the system. A utilization analytics layer would turn the WMS from a coordination tool into an operational planning tool.</p>
         </div>
         <div class="reflection-item">
           <p class="insight-title">Pre-system migration was harder than expected</p>
@@ -686,7 +686,7 @@ a { color: inherit; text-decoration: none; }
         </div>
         <div class="reflection-item">
           <p class="insight-title">Enterprise scale changes the design brief</p>
-          <p class="case-p">Young One came with specific requirements — their warehouse structure, transfer flows, and location hierarchy needed to match existing operational practices exactly. That meant designing to a fixed brief rather than a flexible default. In hindsight, the better approach would have been to establish a strong generic system first — one default flow that works for any factory — and then layer client-specific configurations on top. We're working backwards to that now: extracting the default from what we built for Young One, so future clients get a configurable product rather than a custom one.</p>
+          <p class="case-p">Young One came with specific requirements: their warehouse structure, transfer flows, and location hierarchy needed to match existing operational practices exactly. That meant designing to a fixed brief rather than a flexible default. In hindsight, the better approach would have been to establish a strong generic system first, with one default flow that works for any factory and client-specific configurations layered on top. We're working backwards to that now: extracting the default from what we built for Young One, so future clients get a configurable product rather than a custom one.</p>
         </div>
       </section>
 
@@ -695,12 +695,12 @@ a { color: inherit; text-decoration: none; }
         <div class="other-project-grid">
           <a class="other-project-card" href="machine-maintenance.html">
             <p class="other-project-title">Machine Maintenance Platform</p>
-            <p class="other-project-desc">Mobile-first maintenance system for factory floors — cutting machine downtime by 60% across 20+ factories in Asia.</p>
+            <p class="other-project-desc">Mobile-first maintenance system for factory floors, cutting machine downtime by 60% across 20+ factories in Asia.</p>
             <p class="other-project-cta">View case study →</p>
           </a>
           <a class="other-project-card" href="Fabric-inspection.html">
             <p class="other-project-title">Fabric Inspection System</p>
-            <p class="other-project-desc">Touch-first kiosk system that replaced a third-party tool — improving inspection efficiency by 35–45% across 50+ factories.</p>
+            <p class="other-project-desc">Touch-first kiosk system that replaced a third-party tool, improving inspection efficiency by 35–45% across 50+ factories.</p>
             <p class="other-project-cta">View case study →</p>
           </a>
         </div>
