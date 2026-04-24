@@ -731,7 +731,7 @@ a { color: inherit; text-decoration: none; }
         <p class="case-kicker">Machine Maintenance System - Solvei8</p>
         <h1 class="case-title">When one machine breaks down, <em>the whole line stops</em></h1>
         <p class="case-subtitle">
-          Factories were losing hours to breakdowns tracked on paper and resolved over WhatsApp. I designed a mobile-first maintenance platform that gave floor teams real-time coordination - and gave management their first look at machine health data.
+          Factories were losing hours to breakdowns tracked on paper and resolved over WhatsApp. I designed a mobile-first maintenance platform that gave floor teams real-time coordination, and gave management their first real look at machine health data.
         </p>
         <div class="case-hero-metrics">
           <div class="case-metric"><p class="case-metric-value">60%</p><p class="case-metric-label">Reduction in machine downtime</p></div>
@@ -757,12 +757,12 @@ a { color: inherit; text-decoration: none; }
       <section class="case-section" id="mm-problem">
         <h2 class="case-h2">Problem</h2>
         <p class="case-h3">The system ran on memory and goodwill</p>
-        <p class="case-p">A typical production line has 15-20 machines running continuously. If even one breaks down mid-shift, output on the entire line stops - every minute of downtime has a direct cost in delayed orders and overtime.</p>
+        <p class="case-p">A typical production line has 15-20 machines running continuously. If even one breaks down mid-shift, output on the entire line stops. Every minute of downtime has a direct cost in delayed orders and overtime.</p>
         <p class="case-p">Before this system existed, there was no structured way to handle that moment. A supervisor would notice a breakdown, call the mechanic, hope they showed up. Parts were requested over WhatsApp. No one knew if a machine had been fixed or just abandoned. At the end of the day, there was no record of any of it.</p>
         <div class="problem-grid">
           <div class="case-card"><p class="case-card-title">No escalation path</p><p class="case-card-text">Supervisors reported issues verbally. Mechanics had no queue, no priority signal, no deadline.</p></div>
           <div class="case-card"><p class="case-card-title">No parts visibility</p><p class="case-card-text">Spare parts were requested through calls and messages. Stock was unknown until someone walked to the storeroom.</p></div>
-          <div class="case-card"><p class="case-card-title">No maintenance planning</p><p class="case-card-text">Machines had no service schedules. Breakdowns were the only trigger for action - prevention wasn't possible.</p></div>
+          <div class="case-card"><p class="case-card-title">No maintenance planning</p><p class="case-card-text">Machines had no service schedules. Breakdowns were the only trigger for action; prevention wasn't possible.</p></div>
           <div class="case-card"><p class="case-card-title">No history</p><p class="case-card-text">Every breakdown was a fresh crisis. No data from past failures, no pattern, no way to plan.</p></div>
         </div>
       </section>
@@ -770,7 +770,7 @@ a { color: inherit; text-decoration: none; }
       <section class="case-section" id="mm-learnings">
         <h2 class="case-h2">Findings</h2>
         <p class="case-h3">Three things changed how I designed this</p>
-        <p class="case-p">I spent time with supervisors, mechanics, and inventory managers - the people who would actually live inside this system. The patterns that came out directly shaped design decisions.</p>
+        <p class="case-p">I spent time with supervisors, mechanics, and inventory managers (the people who would actually live inside this system), and the patterns that came out directly shaped design decisions.</p>
         <div class="insight-list">
           <article class="insight">
             <p class="insight-num">01</p>
@@ -784,8 +784,8 @@ a { color: inherit; text-decoration: none; }
             <p class="insight-num">02</p>
             <div>
               <p class="insight-title">Roles have completely different contexts</p>
-              <p class="case-p">A mechanic and an inventory manager need opposite things. The mechanic needs to act in seconds, on a phone, in a loud environment. The inventory manager needs accuracy, context, and an approval trail - from a desk.</p>
-              <p class="insight-decision">Separate mobile app for floor teams, desktop dashboard for admin - not a single responsive product.</p>
+              <p class="case-p">A mechanic and an inventory manager need opposite things. The mechanic needs to act in seconds, on a phone, in a loud environment. The inventory manager needs accuracy, context, and an approval trail, all from a desk.</p>
+              <p class="insight-decision">Separate mobile app for floor teams, desktop dashboard for admin. Not one responsive product trying to serve both.</p>
             </div>
           </article>
           <article class="insight">
@@ -802,12 +802,12 @@ a { color: inherit; text-decoration: none; }
       <section class="case-section" id="mm-design">
         <h2 class="case-h2">The Design</h2>
         <p class="case-h3">Four pillars, one principle: speed over polish</p>
-        <p class="case-p">UX and task efficiency were the priority. Visual design was intentionally kept simple - strong colour-coded states, large touch targets, minimal screen depth. The goal was moving from "need to use" to "easy to use" even under pressure.</p>
+        <p class="case-p">UX and task efficiency were the priority. Visual design was intentionally kept simple: strong colour-coded states, large touch targets, minimal screen depth. The goal was moving from "need to use" to "easy to use" even under pressure.</p>
         <div class="pillars">
           <article class="pillar">
             <div class="pillar-head"><p class="pillar-num">01</p><p class="pillar-title">Machine Breakdown Reporting</p></div>
-            <p class="case-p">The most critical moment is the first 60 seconds after a breakdown is spotted. Every decision in this flow was aimed at getting a ticket raised, assigned, and acknowledged in under a minute - without requiring the supervisor to stop moving.</p>
-            <p class="case-p">The flow is three steps: scan the machine, select the issue type, submit. The mechanic sees it instantly in their queue - with the machine ID, location, and timestamp already filled in.</p>
+            <p class="case-p">The most critical moment is the first 60 seconds after a breakdown is spotted. Every decision in this flow was aimed at getting a ticket raised, assigned, and acknowledged in under a minute, without requiring the supervisor to stop moving.</p>
+            <p class="case-p">The flow is three steps: scan the machine, select the issue type, submit. The mechanic sees it instantly in their queue, with the machine ID, location, and timestamp already filled in.</p>
             <p class="solution-mini-heading">Raise a Ticket</p>
             <div class="solution-controls">
               <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="raise-gallery" data-mode="dark" aria-label="Toggle raise a ticket screen theme">
@@ -839,7 +839,7 @@ a { color: inherit; text-decoration: none; }
                 </div>
                 <div class="shift-shot-copy">
                   <p class="shift-shot-title">Scan or Search Machine</p>
-                  <p class="shift-shot-desc">Scanner helps instantly identify the machine, with search as a fallback when scanning isnt possible</p>
+                  <p class="shift-shot-desc">Scanner helps instantly identify the machine, with search as a fallback when scanning isn't possible</p>
                 </div>
               </article>
               <article class="shift-shot">
@@ -848,7 +848,7 @@ a { color: inherit; text-decoration: none; }
                 </div>
                 <div class="shift-shot-copy">
                   <p class="shift-shot-title">Confirm Machine</p>
-                  <p class="shift-shot-desc">Machine details surface before any action - the supervisor verifies they've scanned the right machine, then decides next steps.</p>
+                  <p class="shift-shot-desc">Machine details surface before any action so the supervisor can verify they've scanned the right machine, then decide next steps.</p>
                 </div>
               </article>
               <article class="shift-shot">
@@ -939,7 +939,7 @@ a { color: inherit; text-decoration: none; }
                   </div>
                   <div class="shift-shot-copy">
                     <p class="shift-shot-title">Approval Controls Designed for Speed & Accuracy</p>
-                    <p class="shift-shot-desc">Managers were opening a separate spreadsheet to check stock before approving each request. Surfacing the requested vs in-stock counter inline removed that entirely - approvals went from a multi-step process to a single confident tap.</p>
+                    <p class="shift-shot-desc">Managers were opening a separate spreadsheet to check stock before approving each request. Surfacing the requested vs in-stock counter inline removed that entirely. Approvals went from a multi-step process to a single confident tap.</p>
                   </div>
                 </article>
               </div>
@@ -948,8 +948,8 @@ a { color: inherit; text-decoration: none; }
           </article>
           <article class="pillar">
             <div class="pillar-head"><p class="pillar-num">02</p><p class="pillar-title">Preventive Maintenance</p></div>
-            <p class="case-p">Breakdowns were the loudest problem, but missed routine maintenance was often the underlying cause. Lubrication cycles, needle replacements, belt checks - all tracked on paper charts nobody reliably updated.</p>
-            <p class="case-p">Each machine is assigned a maintenance cycle. These auto-generate scheduled tickets on the mechanic's device. Mechanics complete a binary checklist - done or not done. Any issue found can instantly convert into a breakdown ticket.</p>
+            <p class="case-p">Breakdowns were the loudest problem, but missed routine maintenance was often the underlying cause. Lubrication cycles, needle replacements, belt checks. All tracked on paper charts nobody reliably updated.</p>
+            <p class="case-p">Each machine is assigned a maintenance cycle. These auto-generate scheduled tickets on the mechanic's device. Mechanics complete a binary checklist: done or not done. Any issue found can instantly convert into a breakdown ticket.</p>
             <div class="solution-controls">
               <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="maintenance-gallery" data-mode="dark" aria-label="Toggle preventive maintenance screen theme">
                 <span class="section-toggle-label">Dark</span>
@@ -1002,12 +1002,12 @@ a { color: inherit; text-decoration: none; }
                 </div>
               </article>
             </div>
-            <div class="tradeoff">The first version had free-form note fields for mechanics. Usage was near-zero. Moving to a binary checklist brought completion rates from inconsistent to near-100% - and when a mechanic did flag an issue, it became a proper breakdown ticket with full traceability.</div>
+            <div class="tradeoff">The first version had free-form note fields for mechanics. Usage was near-zero. Moving to a binary checklist brought completion rates from inconsistent to near-100%. When a mechanic did flag an issue, it became a proper breakdown ticket with full traceability.</div>
           </article>
           <article class="pillar">
             <div class="pillar-head"><p class="pillar-num">03</p><p class="pillar-title">Line Management</p></div>
-            <p class="case-p">Production lines are reconfigured constantly - machines move, orders change, setups shift. A machine that exists on paper but isn't assigned to a line is invisible. You can't plan maintenance for it, track its downtime, or audit when something goes wrong.</p>
-            <p class="case-p">Supervisors create production lines, assign machines to workstations, and manage changes as orders shift. The QR scan-to-assign flow came directly from floor observation - typing serial IDs was a known failure point in earlier tools.</p>
+            <p class="case-p">Production lines are reconfigured constantly: machines move, orders change, setups shift. A machine that exists on paper but isn't assigned to a line is invisible. You can't plan maintenance for it, track its downtime, or audit when something goes wrong.</p>
+            <p class="case-p">Supervisors create production lines, assign machines to workstations, and manage changes as orders shift. The QR scan-to-assign flow came directly from floor observation; typing serial IDs was a known failure point in earlier tools.</p>
             <div class="solution-controls">
               <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="line-gallery" data-mode="dark" aria-label="Toggle line management screen theme">
                 <span class="section-toggle-label">Dark</span>
@@ -1063,7 +1063,7 @@ a { color: inherit; text-decoration: none; }
           </article>
           <article class="pillar">
             <div class="pillar-head"><p class="pillar-num">04</p><p class="pillar-title">Shift Management</p></div>
-            <p class="case-p">Factories frequently run overtime - rush orders, peak seasons, audit prep. When machines ran extended hours with no record of it, maintenance schedules drifted and wear became unpredictable. Supervisors can now log standard and non-standard shifts per production line, which feeds directly into maintenance scheduling and load analysis.</p>
+            <p class="case-p">Factories frequently run overtime for rush orders, peak seasons, and audit prep. When machines ran extended hours with no record of it, maintenance schedules drifted and wear became unpredictable. Supervisors can now log standard and non-standard shifts per production line, which feeds directly into maintenance scheduling and load analysis.</p>
             <div class="solution-controls">
               <button class="section-theme-toggle" type="button" data-action="toggle-gallery-theme" data-target-gallery="shift-gallery" data-mode="dark" aria-label="Toggle shift management screen theme">
                 <span class="section-toggle-label">Dark</span>
@@ -1141,11 +1141,11 @@ a { color: inherit; text-decoration: none; }
         <p class="case-h3">What I'd do differently</p>
         <div class="reflection-item">
           <p class="insight-title">Get to real users faster</p>
-          <p class="case-p">Early research correctly identified the constraint — restricted phone use on the factory floor — so we designed around access. What we underestimated was the cognitive environment: the pace, the reliance on muscle memory, the way colour coding functions as a scanning shortcut rather than a label. Floor users parsed status differently than we expected, not because they misunderstood the interface, but because their mental model was built on speed and pattern recognition. That only became visible once they were actually using it. Post-launch, we went back and reduced the interaction cost — fewer clicks, faster confirmation — now that users had a baseline familiarity with the system.</p>
+          <p class="case-p">Early research correctly identified the constraint (restricted phone use on the factory floor), so we designed around access. What we underestimated was the cognitive environment: the pace, the reliance on muscle memory, the way colour coding functions as a scanning shortcut rather than a label. Floor users parsed status differently than we expected, not because they misunderstood the interface, but because their mental model was built on speed and pattern recognition. That only became visible once they were actually using it. Post-launch, we went back and reduced the interaction cost (fewer clicks, faster confirmation) now that users had a baseline familiarity with the system.</p>
         </div>
         <div class="reflection-item">
           <p class="insight-title">The inventory manager's workflow was only half-solved</p>
-          <p class="case-p">The desktop dashboard handled approvals well, but inventory managers were still maintaining separate spreadsheets for procurement. The more complete version of this product connects maintenance data directly to purchase orders - closing the loop that the unexpected outcome above started to reveal.</p>
+          <p class="case-p">The desktop dashboard handled approvals well, but inventory managers were still maintaining separate spreadsheets for procurement. The more complete version of this product connects maintenance data directly to purchase orders, closing the loop that the unexpected outcome above started to reveal.</p>
         </div>
       </section>
 
